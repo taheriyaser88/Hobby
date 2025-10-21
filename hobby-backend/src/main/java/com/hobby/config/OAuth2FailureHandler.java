@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class OAuth2FailureHandler implements AuthenticationFailureHandler {
@@ -26,6 +27,6 @@ public class OAuth2FailureHandler implements AuthenticationFailureHandler {
         
         // Redirect to frontend with error
         response.sendRedirect("http://localhost:4200/login?error=true&message=" + 
-                            java.net.URLEncoder.encode(exception.getMessage(), "UTF-8"));
+                            java.net.URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8));
     }
 }
