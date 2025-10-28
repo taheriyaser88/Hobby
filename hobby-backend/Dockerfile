@@ -1,27 +1,29 @@
-# Use OpenJDK 21 as base image
-FROM openjdk:21-jdk-slim
+# Multi-stage build
+# Stage 1: Build with Maven
+FROM maven:3.9-eclipse-temurin-21 AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
-
-# Make mvnw executable
-RUN chmod +x mvnw
-
-# Download dependencies
-RUN ./mvnw dependency:go-offline -B
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
 # Copy source code
 COPY src ./src
 
 # Build the application
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run with minimal JRE
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+# Copy jar from build stage
+COPY --from=build /app/target/hobby-backend-1.0-SNAPSHOT.jar app.jar
 
 # Create non-root user
-RUN addgroup --system spring && adduser --system spring --ingroup spring
+RUN addgroup -S spring && adduser -S spring -G spring
 RUN chown -R spring:spring /app
 USER spring:spring
 
@@ -30,7 +32,7 @@ EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
 
 # Run the application
-CMD ["java", "-jar", "target/hobby-backend-1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
