@@ -52,7 +52,12 @@ fi
 echo -e "${YELLOW}[2/6] Stopping existing containers...${NC}"
 cd $PROJECT_DIR
 if [ -f docker-compose.yml ]; then
-    docker-compose down
+    # Try docker compose (v2) first, then docker-compose (v1)
+    if command -v docker &> /dev/null && docker compose version &> /dev/null; then
+        docker compose down || true
+    elif command -v docker-compose &> /dev/null; then
+        docker-compose down || true
+    fi
 fi
 
 # Step 3: Create Nginx configuration
@@ -121,10 +126,6 @@ echo -e "${YELLOW}[4/6] Updating docker-compose.yml for production...${NC}"
 # Make sure we're in the project directory
 cd $PROJECT_DIR
 
-# Debug: List files in directory
-echo "Files in $PROJECT_DIR:"
-ls -la
-
 # Backup original docker-compose.yml if exists
 if [ -f docker-compose.yml ]; then
     cp docker-compose.yml docker-compose.yml.bak
@@ -187,8 +188,21 @@ fi
 # Step 5: Build and start containers
 echo -e "${YELLOW}[5/6] Building and starting containers...${NC}"
 cd $PROJECT_DIR
-docker-compose build --no-cache
-docker-compose up -d
+
+# Detect docker compose command
+if command -v docker &> /dev/null && docker compose version &> /dev/null; then
+    COMPOSE_CMD="docker compose"
+    echo "Using Docker Compose V2"
+elif command -v docker-compose &> /dev/null; then
+    COMPOSE_CMD="docker-compose"
+    echo "Using Docker Compose V1"
+else
+    echo -e "${RED}Error: Neither 'docker compose' nor 'docker-compose' found!${NC}"
+    exit 1
+fi
+
+$COMPOSE_CMD build --no-cache
+$COMPOSE_CMD up -d
 
 # Step 6: Wait for services to be ready
 echo -e "${YELLOW}[6/6] Waiting for services to be ready...${NC}"
@@ -201,7 +215,7 @@ echo -e "${GREEN}========================================${NC}"
 
 echo ""
 echo "Service Status:"
-docker-compose ps
+$COMPOSE_CMD ps
 
 echo ""
 echo -e "${GREEN}Access the application at:${NC}"
