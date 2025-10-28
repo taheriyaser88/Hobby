@@ -227,18 +227,20 @@ echo -e "${YELLOW}[6/6] Waiting for services to be ready...${NC}"
 echo "Waiting 20 seconds for MySQL to start..."
 sleep 20
 
-# Show MySQL logs and status
-echo "Checking MySQL status..."
+# Show MySQL logs and status immediately
+echo ""
+echo "=== MySQL Container Status ==="
 $COMPOSE_CMD ps mysql
 
+echo ""
+echo "=== MySQL Logs ==="
+$COMPOSE_CMD logs mysql || docker logs hobby-mysql 2>/dev/null || echo "Cannot access MySQL logs"
+
+# If MySQL is not running, try to diagnose
 if ! $COMPOSE_CMD ps | grep -q "hobby-mysql.*Up"; then
-    echo -e "${RED}MySQL failed to start. Logs:${NC}"
-    $COMPOSE_CMD logs mysql
     echo ""
-    echo "Trying to start MySQL without healthcheck..."
-    $COMPOSE_CMD up -d mysql --remove-orphans
-    sleep 10
-    $COMPOSE_CMD logs mysql
+    echo "Checking container status..."
+    docker ps -a | grep hobby-mysql || echo "Container not found"
 fi
 
 # Check service status
