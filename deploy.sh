@@ -120,27 +120,100 @@ server {
 }
 EOF
 
-# Step 4: Update docker-compose.yml to use Nginx
-echo -e "${YELLOW}[4/6] Updating docker-compose.yml for production...${NC}"
+# Step 4: Create production docker-compose.yml with Nginx
+echo -e "${YELLOW}[4/6] Creating production docker-compose.yml...${NC}"
 
 # Make sure we're in the project directory
 cd $PROJECT_DIR
 
-# Backup original docker-compose.yml if exists
+# Create production docker-compose.yml
 if [ -f docker-compose.yml ]; then
     cp docker-compose.yml docker-compose.yml.bak
     
-    # Update existing docker-compose.yml to add Nginx and modify ports
-    sed -i 's/- "8080:8080"/- "127.0.0.1:8080:8080"/' docker-compose.yml 2>/dev/null || true
-    sed -i 's/- "80:80"/- "127.0.0.1:81:80"/' docker-compose.yml 2>/dev/null || true
+    # Create new docker-compose.yml for production
+    cat > docker-compose.yml << 'EOF'
+version: '3.8'
 
-    # Add Nginx service to docker-compose.yml if not exists
-    if ! grep -q "hobby-nginx" docker-compose.yml; then
-        # Remove the last two lines (volumes and networks closing)
-        sed -i '$ d' docker-compose.yml
-        sed -i '$ d' docker-compose.yml
-        
-        cat >> docker-compose.yml << 'EOF'
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: hobby-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root@root
+      MYSQL_DATABASE: hobby_db
+      MYSQL_USER: hobby_user
+      MYSQL_PASSWORD: hobby_password
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./hobby-backend/src/main/resources/db/migration:/docker-entrypoint-initdb.d
+    networks:
+      - hobby-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Backend Service
+  backend:
+    build: ./hobby-backend
+    container_name: hobby-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hobby_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: hobby_user
+      SPRING_DATASOURCE_PASSWORD: hobby_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+      GOOGLE_CREDENTIALS_FILE_PATH: ${GOOGLE_CREDENTIALS_FILE_PATH}
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - hobby-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Service
+  frontend:
+    build: ./hobby-frontend
+    container_name: hobby-frontend
+    ports:
+      - "127.0.0.1:81:80"
+    depends_on:
+      - backend
+    networks:
+      - hobby-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: hobby-redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    networks:
+      - hobby-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # Nginx Reverse Proxy
   nginx:
@@ -164,22 +237,14 @@ if [ -f docker-compose.yml ]; then
       retries: 3
 
 volumes:
-EOF
-        # Check if mysql_data already exists and add nginx_logs
-        if grep -q "mysql_data:" docker-compose.yml; then
-            sed -i '/mysql_data:/a \  nginx_logs:' docker-compose.yml
-        else
-            echo "  mysql_data:" >> docker-compose.yml
-            echo "  nginx_logs:" >> docker-compose.yml
-        fi
-        
-        cat >> docker-compose.yml << 'EOF'
+  mysql_data:
+  nginx_logs:
 
 networks:
   hobby-network:
     driver: bridge
 EOF
-    fi
+    echo "Production docker-compose.yml created successfully"
 else
     echo "Error: docker-compose.yml not found!"
     exit 1
