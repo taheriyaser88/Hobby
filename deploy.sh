@@ -114,13 +114,24 @@ EOF
 # Step 4: Update docker-compose.yml to use Nginx
 echo -e "${YELLOW}[4/6] Updating docker-compose.yml for production...${NC}"
 
-# Update existing docker-compose.yml to add Nginx and modify ports
-sed -i 's/- "8080:8080"/- "127.0.0.1:8080:8080"/' $PROJECT_DIR/docker-compose.yml
-sed -i 's/- "80:80"/- "127.0.0.1:81:80"/' $PROJECT_DIR/docker-compose.yml
+# Make sure we're in the project directory
+cd $PROJECT_DIR
 
-# Add Nginx service to docker-compose.yml if not exists
-if ! grep -q "hobby-nginx" $PROJECT_DIR/docker-compose.yml; then
-    cat >> $PROJECT_DIR/docker-compose.yml << 'EOF'
+# Backup original docker-compose.yml if exists
+if [ -f docker-compose.yml ]; then
+    cp docker-compose.yml docker-compose.yml.bak
+    
+    # Update existing docker-compose.yml to add Nginx and modify ports
+    sed -i 's/- "8080:8080"/- "127.0.0.1:8080:8080"/' docker-compose.yml 2>/dev/null || true
+    sed -i 's/- "80:80"/- "127.0.0.1:81:80"/' docker-compose.yml 2>/dev/null || true
+
+    # Add Nginx service to docker-compose.yml if not exists
+    if ! grep -q "hobby-nginx" docker-compose.yml; then
+        # Remove the last two lines (volumes and networks closing)
+        sed -i '$ d' docker-compose.yml
+        sed -i '$ d' docker-compose.yml
+        
+        cat >> docker-compose.yml << 'EOF'
 
   # Nginx Reverse Proxy
   nginx:
@@ -142,10 +153,27 @@ if ! grep -q "hobby-nginx" $PROJECT_DIR/docker-compose.yml; then
       interval: 30s
       timeout: 10s
       retries: 3
-EOF
 
-    # Add nginx_logs to volumes section
-    sed -i '/mysql_data:/a \  nginx_logs:' $PROJECT_DIR/docker-compose.yml
+volumes:
+EOF
+        # Check if mysql_data already exists and add nginx_logs
+        if grep -q "mysql_data:" docker-compose.yml; then
+            sed -i '/mysql_data:/a \  nginx_logs:' docker-compose.yml
+        else
+            echo "  mysql_data:" >> docker-compose.yml
+            echo "  nginx_logs:" >> docker-compose.yml
+        fi
+        
+        cat >> docker-compose.yml << 'EOF'
+
+networks:
+  hobby-network:
+    driver: bridge
+EOF
+    fi
+else
+    echo "Error: docker-compose.yml not found!"
+    exit 1
 fi
 
 # Step 5: Build and start containers
