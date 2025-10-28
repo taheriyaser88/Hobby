@@ -54,11 +54,14 @@ cd $PROJECT_DIR
 if [ -f docker-compose.yml ]; then
     # Try docker compose (v2) first, then docker-compose (v1)
     if command -v docker &> /dev/null && docker compose version &> /dev/null; then
-        docker compose down || true
+        docker compose down -v || true
     elif command -v docker-compose &> /dev/null; then
-        docker-compose down || true
+        docker-compose down -v || true
     fi
 fi
+
+# Clean up any orphaned containers
+docker rm -f hobby-mysql hobby-backend hobby-frontend hobby-redis 2>/dev/null || true
 
 # Step 3: Skip Nginx for now (only backend)
 echo -e "${YELLOW}[3/6] Skipping Nginx (backend only)...${NC}"
@@ -214,11 +217,21 @@ else
 fi
 
 $COMPOSE_CMD build --no-cache
+
+# Check logs before starting
+echo "Starting containers..."
 $COMPOSE_CMD up -d
 
 # Step 6: Wait for services to be ready
 echo -e "${YELLOW}[6/6] Waiting for services to be ready...${NC}"
-sleep 10
+echo "Waiting 20 seconds for MySQL to start..."
+sleep 20
+
+# Show MySQL logs if it failed
+if ! $COMPOSE_CMD ps | grep -q "hobby-mysql.*Up"; then
+    echo -e "${RED}MySQL failed to start. Logs:${NC}"
+    $COMPOSE_CMD logs mysql | tail -50
+fi
 
 # Check service status
 echo -e "${GREEN}========================================${NC}"
