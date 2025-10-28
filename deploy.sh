@@ -30,14 +30,18 @@ echo -e "${GREEN}========================================${NC}"
 
 # Step 1: Clone or update repository
 echo -e "${YELLOW}[1/6] Setting up project directory...${NC}"
-if [ -d "$PROJECT_DIR" ]; then
+if [ -d "$PROJECT_DIR/.git" ]; then
     echo "Project directory exists, updating..."
     cd $PROJECT_DIR
     git fetch origin
     git checkout $BRANCH
     git pull origin $BRANCH
+    git reset --hard origin/$BRANCH
 else
     echo "Cloning repository..."
+    if [ -d "$PROJECT_DIR" ]; then
+        rm -rf $PROJECT_DIR
+    fi
     mkdir -p $PROJECT_DIR
     cd $PROJECT_DIR
     git clone $GIT_REPO .
