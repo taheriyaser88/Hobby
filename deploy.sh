@@ -60,9 +60,10 @@ if [ -f docker-compose.yml ]; then
     fi
 fi
 
-# Step 3: Create Nginx configuration
-echo -e "${YELLOW}[3/6] Setting up Nginx configuration...${NC}"
-cat > $PROJECT_DIR/nginx.conf << 'EOF'
+# Step 3: Skip Nginx for now (only backend)
+echo -e "${YELLOW}[3/6] Skipping Nginx (backend only)...${NC}"
+# Nginx configuration skipped for now
+cat > /dev/null << 'EOF'
 server {
     listen 80;
     server_name _;
@@ -130,10 +131,8 @@ cd $PROJECT_DIR
 if [ -f docker-compose.yml ]; then
     cp docker-compose.yml docker-compose.yml.bak
     
-    # Create new docker-compose.yml for production
+    # Create new docker-compose.yml for production (Backend + MySQL only)
     cat > docker-compose.yml << 'EOF'
-version: '3.8'
-
 services:
   # MySQL Database
   mysql:
@@ -166,11 +165,11 @@ services:
       SPRING_DATASOURCE_USERNAME: hobby_user
       SPRING_DATASOURCE_PASSWORD: hobby_password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
-      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
-      GOOGLE_CREDENTIALS_FILE_PATH: ${GOOGLE_CREDENTIALS_FILE_PATH}
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME:-}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      GOOGLE_CREDENTIALS_FILE_PATH: ${GOOGLE_CREDENTIALS_FILE_PATH:-}
     ports:
-      - "127.0.0.1:8080:8080"
+      - "80:8080"
     depends_on:
       mysql:
         condition: service_healthy
@@ -183,62 +182,8 @@ services:
       timeout: 10s
       retries: 3
 
-  # Frontend Service
-  frontend:
-    build: ./hobby-frontend
-    container_name: hobby-frontend
-    ports:
-      - "127.0.0.1:81:80"
-    depends_on:
-      - backend
-    networks:
-      - hobby-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Redis for caching (optional)
-  redis:
-    image: redis:7-alpine
-    container_name: hobby-redis
-    ports:
-      - "127.0.0.1:6379:6379"
-    networks:
-      - hobby-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Nginx Reverse Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: hobby-nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - nginx_logs:/var/log/nginx
-    depends_on:
-      - backend
-      - frontend
-    networks:
-      - hobby-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
 volumes:
   mysql_data:
-  nginx_logs:
 
 networks:
   hobby-network:
