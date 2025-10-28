@@ -152,9 +152,11 @@ services:
       - hobby-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot@root"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
 
   # Backend Service
   backend:
