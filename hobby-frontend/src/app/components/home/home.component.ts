@@ -7,128 +7,75 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="hero-section">
-      <div class="container">
-        <div class="hero-content">
-          <h1 class="hero-title">Manage Your Hobbies</h1>
-          <p class="hero-subtitle">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-primary-500 to-purple-600 text-white py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-5xl md:text-6xl font-bold mb-6">
+            Manage Your Hobbies
+          </h1>
+          <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto opacity-90 leading-relaxed">
             Track your hobbies, set goals, and connect with like-minded people.
             Start your journey today!
           </p>
-          <div class="hero-actions">
-            <a routerLink="/login" class="btn btn-primary btn-large">Get Started</a>
-            <a routerLink="/dashboard" class="btn btn-secondary btn-large">Dashboard</a>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a routerLink="/login" 
+               class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-primary-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-all duration-300 shadow-lg">
+              Get Started
+            </a>
+            <a routerLink="/app/dashboard" 
+               class="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-lg font-medium rounded-lg text-white hover:bg-white hover:text-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-all duration-300">
+              Dashboard
+            </a>
           </div>
         </div>
       </div>
     </div>
     
-    <div class="features-section">
-      <div class="container">
-        <h2 class="section-title">Why Choose Hobby Manager?</h2>
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">🎯</div>
-            <h3>Track Progress</h3>
-            <p>Set goals and track your progress in your favorite hobbies.</p>
+    <!-- Features Section -->
+    <div class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Why Choose Hobby Manager?
+          </h2>
+          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Discover the features that make hobby management effortless and enjoyable
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Feature 1 -->
+          <div class="text-center p-8 bg-gray-50 rounded-2xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+            <div class="text-6xl mb-6">🎯</div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Track Progress</h3>
+            <p class="text-gray-600 leading-relaxed">
+              Set goals and track your progress in your favorite hobbies with detailed analytics and insights.
+            </p>
           </div>
           
-          <div class="feature-card">
-            <div class="feature-icon">👥</div>
-            <h3>Connect</h3>
-            <p>Find and connect with people who share your interests.</p>
+          <!-- Feature 2 -->
+          <div class="text-center p-8 bg-gray-50 rounded-2xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+            <div class="text-6xl mb-6">👥</div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Connect</h3>
+            <p class="text-gray-600 leading-relaxed">
+              Find and connect with people who share your interests and build meaningful relationships.
+            </p>
           </div>
           
-          <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Analytics</h3>
-            <p>Get insights into your hobby activities and achievements.</p>
+          <!-- Feature 3 -->
+          <div class="text-center p-8 bg-gray-50 rounded-2xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+            <div class="text-6xl mb-6">📊</div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Analytics</h3>
+            <p class="text-gray-600 leading-relaxed">
+              Get insights into your hobby activities and achievements with comprehensive reporting.
+            </p>
           </div>
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    .hero-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 80px 0;
-      text-align: center;
-    }
-    
-    .hero-title {
-      font-size: 3rem;
-      font-weight: bold;
-      margin-bottom: 24px;
-    }
-    
-    .hero-subtitle {
-      font-size: 1.2rem;
-      margin-bottom: 40px;
-      opacity: 0.9;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .hero-actions {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    
-    .btn-large {
-      padding: 16px 32px;
-      font-size: 18px;
-    }
-    
-    .features-section {
-      padding: 80px 0;
-      background: white;
-    }
-    
-    .section-title {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 60px;
-      color: #333;
-    }
-    
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 40px;
-    }
-    
-    .feature-card {
-      text-align: center;
-      padding: 40px 20px;
-      border-radius: 12px;
-      background: #f8f9fa;
-      transition: transform 0.3s ease;
-      
-      &:hover {
-        transform: translateY(-5px);
-      }
-    }
-    
-    .feature-icon {
-      font-size: 3rem;
-      margin-bottom: 20px;
-    }
-    
-    .feature-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 16px;
-      color: #333;
-    }
-    
-    .feature-card p {
-      color: #666;
-      line-height: 1.6;
-    }
-  `]
+  styles: []
 })
 export class HomeComponent {}
 

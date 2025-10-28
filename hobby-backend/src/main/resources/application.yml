@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/hobby_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
@@ -21,23 +24,24 @@ spring:
       allowed-headers: "*"
       allow-credentials: true
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 797415440787-hmpbus92hq2baqhrtg8mb0uk5487ovhv.apps.googleusercontent.com
-            client-secret: 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
-            scope:
-              - openid
-              - profile
-              - email
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            authorization-grant-type: authorization_code
-            client-name: Google
-        provider:
-          google:
-            issuer-uri: https://accounts.google.com
+  spring:
+    security:
+      oauth2:
+        client:
+          registration:
+            google:
+              client-id: 797415440787-hmpbus92hq2baqhrtg8mb0uk5487ovhv.apps.googleusercontent.com
+              client-secret: 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
+              scope:
+                - openid
+                - profile
+                - email
+              redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+              authorization-grant-type: authorization_code
+              client-name: Google
+          provider:
+            google:
+              issuer-uri: https://accounts.google.com
 
   mail:
     host: smtp.gmail.com
@@ -50,3 +54,19 @@ spring:
           auth: true
           starttls:
             enable: true
+logging:
+  level:
+    com.hobby: DEBUG
+
+app:
+  name: Hobby Manager
+  sms:
+    enabled: false
+    provider: twilio
+  google:
+    credentials:
+      file:
+        path: ${GOOGLE_CREDENTIALS_FILE_PATH:}
+    application:
+      name: Hobby Manager
+
