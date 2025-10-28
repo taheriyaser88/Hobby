@@ -121,6 +121,10 @@ echo -e "${YELLOW}[4/6] Updating docker-compose.yml for production...${NC}"
 # Make sure we're in the project directory
 cd $PROJECT_DIR
 
+# Debug: List files in directory
+echo "Files in $PROJECT_DIR:"
+ls -la
+
 # Backup original docker-compose.yml if exists
 if [ -f docker-compose.yml ]; then
     cp docker-compose.yml docker-compose.yml.bak
