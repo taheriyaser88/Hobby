@@ -227,10 +227,18 @@ echo -e "${YELLOW}[6/6] Waiting for services to be ready...${NC}"
 echo "Waiting 20 seconds for MySQL to start..."
 sleep 20
 
-# Show MySQL logs if it failed
+# Show MySQL logs and status
+echo "Checking MySQL status..."
+$COMPOSE_CMD ps mysql
+
 if ! $COMPOSE_CMD ps | grep -q "hobby-mysql.*Up"; then
     echo -e "${RED}MySQL failed to start. Logs:${NC}"
-    $COMPOSE_CMD logs mysql | tail -50
+    $COMPOSE_CMD logs mysql
+    echo ""
+    echo "Trying to start MySQL without healthcheck..."
+    $COMPOSE_CMD up -d mysql --remove-orphans
+    sleep 10
+    $COMPOSE_CMD logs mysql
 fi
 
 # Check service status
