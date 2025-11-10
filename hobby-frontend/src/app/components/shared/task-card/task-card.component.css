@@ -1,0 +1,122 @@
+.task-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    transition: 0.3s;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.task-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.task-card:hover .card-actions {
+    opacity: 1;
+}
+
+.card-actions {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0;
+}
+
+.edit-btn {
+    color: #1a73e8;
+}
+
+.edit-btn:hover {
+    background: rgba(26, 115, 232, 0.1);
+    transform: scale(1.05);
+}
+
+.delete-btn {
+    color: #ea4335;
+}
+
+.delete-btn:hover {
+    background: rgba(234, 67, 53, 0.1);
+    transform: scale(1.05);
+}
+
+.task-card h4 {
+    color: #1a73e8;
+    margin-bottom: 0.3rem;
+}
+
+.task-card p {
+    color: #777;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.status {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 0.35rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.status.todo { 
+    background: #f9a825; 
+}
+
+.status.inprogress { 
+    background: #1a73e8; 
+}
+
+.status.done { 
+    background: #34a853; 
+}
+
+.priority-label {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+.priority-low {
+    background: #fff8e1;
+    color: #f9a825;
+}
+
+.priority-medium {
+    background: #e3f2fd;
+    color: #1a73e8;
+}
+
+.priority-high {
+    background: #ffebee;
+    color: #ea4335;
+}

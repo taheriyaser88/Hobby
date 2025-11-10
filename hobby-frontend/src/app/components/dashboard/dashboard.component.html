@@ -1,0 +1,61 @@
+<div class="dashboard-content">
+    <header class="dashboard-header">
+        <h1>داشبورد شما</h1>
+        <button class="btn-create" routerLink="/events">➕ ایجاد رویداد جدید</button>
+    </header>
+
+    <!-- آمار -->
+    <section class="stats-grid">
+        <div class="stat-card stat-orange">
+            <div class="stat-icon">😊</div>
+            <h3>۹۵٪</h3>
+            <p>رضایت شرکت‌کنندگان</p>
+        </div>
+        <div class="stat-card stat-blue">
+            <div class="stat-icon">✅</div>
+            <h3>۱۲</h3>
+            <p>وظیفه در انتظار</p>
+        </div>
+        <div class="stat-card stat-orange">
+            <div class="stat-icon">🎟️</div>
+            <h3>۲۵۸</h3>
+            <p>بلیت فروخته‌شده</p>
+        </div>
+        <div class="stat-card stat-blue">
+            <div class="stat-icon">📅</div>
+            <h3>۴</h3>
+            <p>رویداد فعال</p>
+        </div>
+    </section>
+
+    <div class="dashboard-content-grid">
+        <!-- رویدادها -->
+        <section class="events-section">
+            <h2 class="section-title">رویدادهای شما</h2>
+            <div class="event-list">
+                <app-event-card *ngFor="let event of recentEvents" [event]="event"></app-event-card>
+                <div class="event-card" *ngIf="recentEvents.length === 0" style="text-align: center; color: #777; padding: 2rem;">
+                    <p style="margin-bottom: 1rem;">هنوز رویدادی ایجاد نشده است</p>
+                    <button routerLink="/events/new" style="padding: 0.6rem 1.5rem; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        ایجاد رویداد جدید
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- وظایف اخیر -->
+        <section class="tasks-section">
+            <h2 class="section-title">آخرین وظایف</h2>
+            <div class="tasks-list">
+                <app-task-card *ngFor="let task of recentTasks" [task]="task"></app-task-card>
+                <div class="task-item" *ngIf="recentTasks.length === 0" style="text-align: center; color: #777; padding: 2rem;">
+                    <p style="margin-bottom: 1rem;">هنوز وظیفه‌ای ایجاد نشده است</p>
+                    <button routerLink="/tasks/new" style="padding: 0.6rem 1.5rem; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        ایجاد وظیفه جدید
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+

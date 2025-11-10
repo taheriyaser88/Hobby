@@ -1,0 +1,227 @@
+<!-- Modal برای نمایش جزئیات جلسه -->
+<div *ngIf="showViewModal && selectedSession" class="modal-overlay" (click)="closeViewModal($event)">
+  <div class="modal-content view-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>جزئیات جلسه</h3>
+      <button class="modal-close" (click)="closeViewModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="session-details">
+        <div class="detail-row">
+          <div class="detail-label">عنوان جلسه:</div>
+          <div class="detail-value">{{ selectedSession.title || '—' }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="selectedSession.description">
+          <div class="detail-label">توضیحات:</div>
+          <div class="detail-value">{{ selectedSession.description }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="selectedSession.speakerName || selectedSession.speakerId">
+          <div class="detail-label">سخنران:</div>
+          <div class="detail-value">{{ selectedSession.speakerName || selectedSession.speakerId || '—' }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="selectedSession.location">
+          <div class="detail-label">محل برگزاری:</div>
+          <div class="detail-value">{{ selectedSession.location }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="selectedSession.capacity">
+          <div class="detail-label">ظرفیت:</div>
+          <div class="detail-value">{{ getPersianNumber(selectedSession.capacity) }} نفر</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">تاریخ:</div>
+          <div class="detail-value">{{ getSessionDate(selectedSession) }}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">ساعت:</div>
+          <div class="detail-value">{{ getSessionStartTime(selectedSession) }} - {{ getSessionEndTime(selectedSession) }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="selectedSession.streamingUrl">
+          <div class="detail-label">لینک پخش زنده:</div>
+          <div class="detail-value">
+            <a [href]="selectedSession.streamingUrl" target="_blank" rel="noopener noreferrer">
+              {{ selectedSession.streamingUrl }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn" (click)="closeViewModal()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal برای افزودن جلسه -->
+<div *ngIf="showModal" class="modal-overlay" (click)="closeModal($event)">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>افزودن جلسه جدید</h3>
+      <button class="modal-close" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="saveSession()">
+        <div class="form-row">
+          <label>عنوان جلسه *</label>
+          <input 
+            type="text" 
+            [(ngModel)]="newSession.title" 
+            name="title"
+            placeholder="عنوان جلسه را وارد کنید"
+            required>
+        </div>
+
+        <div class="form-row">
+          <label>توضیحات</label>
+          <textarea 
+            [(ngModel)]="newSession.description" 
+            name="description"
+            placeholder="توضیحات جلسه (اختیاری)"
+            rows="4"></textarea>
+        </div>
+
+        <div class="form-row">
+          <label>نام سخنران</label>
+          <input 
+            type="text" 
+            [(ngModel)]="newSession.speakerName" 
+            name="speakerName"
+            placeholder="نام سخنران (اختیاری)">
+        </div>
+
+        <div class="form-row">
+          <label>محل برگزاری</label>
+          <input 
+            type="text" 
+            [(ngModel)]="newSession.location" 
+            name="location"
+            placeholder="محل برگزاری (اختیاری)">
+        </div>
+
+        <div class="form-row">
+          <label>ظرفیت</label>
+          <input 
+            type="number" 
+            [(ngModel)]="newSession.capacity" 
+            name="capacity"
+            placeholder="ظرفیت (اختیاری)"
+            min="1">
+        </div>
+
+        <div class="form-row">
+          <label>تاریخ جلسه (شمسی) *</label>
+          <div class="date-input-group">
+            <input 
+              type="number" 
+              [(ngModel)]="sessionDatePersian.day" 
+              name="sessionDateDay"
+              placeholder="روز" 
+              min="1"
+              max="31"
+              style="width: 60px; direction: rtl;">
+            <span>/</span>
+            <input 
+              type="number" 
+              [(ngModel)]="sessionDatePersian.month" 
+              name="sessionDateMonth"
+              placeholder="ماه" 
+              min="1"
+              max="12"
+              style="width: 60px; direction: rtl;">
+            <span>/</span>
+            <input 
+              type="number" 
+              [(ngModel)]="sessionDatePersian.year" 
+              name="sessionDateYear"
+              placeholder="سال" 
+              min="1400"
+              max="1410"
+              style="width: 80px; direction: rtl;">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>ساعت شروع *</label>
+          <div class="time-input-group">
+            <input 
+              type="number" 
+              [(ngModel)]="startTimePersian.hour" 
+              name="startTimeHour"
+              placeholder="ساعت" 
+              min="0"
+              max="23"
+              style="width: 60px; direction: rtl;">
+            <span>:</span>
+            <input 
+              type="number" 
+              [(ngModel)]="startTimePersian.minute" 
+              name="startTimeMinute"
+              placeholder="دقیقه" 
+              min="0"
+              max="59"
+              style="width: 60px; direction: rtl;">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>ساعت پایان *</label>
+          <div class="time-input-group">
+            <input 
+              type="number" 
+              [(ngModel)]="endTimePersian.hour" 
+              name="endTimeHour"
+              placeholder="ساعت" 
+              min="0"
+              max="23"
+              style="width: 60px; direction: rtl;">
+            <span>:</span>
+            <input 
+              type="number" 
+              [(ngModel)]="endTimePersian.minute" 
+              name="endTimeMinute"
+              placeholder="دقیقه" 
+              min="0"
+              max="59"
+              style="width: 60px; direction: rtl;">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn secondary" (click)="closeModal()">انصراف</button>
+          <button type="submit" class="btn">ذخیره</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+        <h4>جلسات</h4>
+        <button class="btn secondary" (click)="openNewSession()">+ افزودن جلسه</button>
+    </div>
+    <table style="margin-top:12px" *ngIf="sessions.length > 0; else noSessions">
+        <thead><tr><th>عنوان</th><th>سخنران</th><th>ساعت</th><th>عملیات</th></tr></thead>
+        <tbody>
+        <tr *ngFor="let session of sessions">
+            <td>{{ session.title || '—' }}</td>
+            <td>{{ session.speakerName || session.speakerId || '—' }}</td>
+            <td>{{ getSessionTime(session) }}</td>
+            <td>
+              <button class="btn" (click)="viewSession(session)" style="margin-left: 8px;">نمایش</button>
+              <button class="btn secondary" (click)="deleteSession(session.id)" style="background: var(--danger); color: white;">حذف</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <ng-template #noSessions>
+        <p class="small" style="margin-top:12px;text-align:center;color:#777">هنوز جلسه‌ای تعریف نشده است.</p>
+    </ng-template>
+</div>

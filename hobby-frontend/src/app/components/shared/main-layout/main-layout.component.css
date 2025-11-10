@@ -1,0 +1,92 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.page-wrapper {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+}
+
+aside {
+    width: 260px;
+    background: white;
+    padding: 1.5rem;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-header {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.sidebar-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    padding: 4px 0;
+    overflow: visible;
+}
+
+.sidebar-breadcrumb span {
+    display: inline;
+}
+
+.sidebar-breadcrumb .breadcrumb-home {
+    color: #1a73e8;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sidebar-breadcrumb .breadcrumb-home:hover {
+    color: #155ec0;
+    text-decoration: underline;
+}
+
+.sidebar-breadcrumb .breadcrumb-separator {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.sidebar-breadcrumb .breadcrumb-current {
+    color: #333;
+    font-weight: 700;
+    font-size: 0.8rem;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+nav a {
+    text-decoration: none;
+    color: #222;
+    display: block;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    transition: 0.3s;
+}
+
+nav a:hover, nav a.active {
+    background: #1a73e8;
+    color: #fff;
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+    background: #f5f6fa;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+

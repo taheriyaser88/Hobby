@@ -1,0 +1,300 @@
+[
+  {
+    "id": 1,
+    "organizationId": "org-1001",
+    "title": "کنفرانس مدیریت پروژه",
+    "slug": "conf-project-management-1404",
+    "category": "business",
+    "description": "همایش تخصصی مدیریت پروژه با حضور اساتید برجسته",
+    "summary": "همایش تخصصی مدیریت پروژه",
+    "startAt": "2024-10-20T09:00:00+03:30",
+    "endAt": "2024-10-20T17:00:00+03:30",
+    "timezone": "Asia/Tehran",
+    "recurrence": null,
+    "type": "PHYSICAL",
+    "location": {
+      "address": "تهران، هتل اسپیناس",
+      "city": "تهران",
+      "province": "تهران",
+      "country": "ایران",
+      "venue": "سالن کنفرانس A",
+      "lat": 35.6892,
+      "lng": 51.3890,
+      "directions": "ورودی اصلی هتل اسپیناس، طبقه همکف، سالن کنفرانس A"
+    },
+    "virtualUrl": null,
+    "status": "PUBLISHED",
+    "team": [
+      {
+        "userId": "u-1001",
+        "role": "ORGANIZER",
+        "permissions": ["ALL"],
+        "assignedAt": "2024-09-01T00:00:00Z"
+      },
+      {
+        "userId": "u-1002",
+        "role": "STAFF",
+        "permissions": ["CHECKIN"],
+        "assignedAt": "2024-09-05T00:00:00Z"
+      }
+    ],
+    "settings": {
+      "maxCapacity": 150,
+      "allowWaitlist": true,
+      "requireApproval": false,
+      "checkInRequired": true,
+      "allowCancel": true,
+      "cancelDeadline": "2024-10-18T23:59:59+03:30",
+      "emailNotifications": true,
+      "smsNotifications": true,
+      "publicRegistration": true,
+      "password": null,
+      "customFields": []
+    },
+    "branding": {
+      "logo": "https://example.com/logos/project-management.png",
+      "banner": "https://example.com/banners/project-management.jpg",
+      "primaryColor": "#2563eb",
+      "secondaryColor": "#1e40af",
+      "favicon": "https://example.com/favicons/project-management.ico"
+    },
+    "seo": {
+      "metaTitle": "کنفرانس مدیریت پروژه 1404 - همایش تخصصی",
+      "metaDescription": "همایش تخصصی مدیریت پروژه با حضور اساتید برجسته در زمینه مدیریت پروژه، برنامه‌ریزی و اجرا",
+      "keywords": ["مدیریت پروژه", "همایش", "کنفرانس", "PMI", "project management"],
+      "ogImage": "https://example.com/og-images/project-management.jpg",
+      "canonical": "https://example.com/events/conf-project-management-1404"
+    },
+    "stats": {
+      "totalAttendees": 120,
+      "checkedInAttendees": 95,
+      "totalTicketsSold": 120,
+      "totalRevenue": 36000000,
+      "currency": "IRR",
+      "views": 1250,
+      "shares": 45
+    },
+    "createdAt": "2024-09-01T00:00:00Z",
+    "updatedAt": "2024-09-15T00:00:00Z",
+    "publishedAt": "2024-09-10T00:00:00Z",
+    "tasks": [],
+    "sessions": [],
+    "tickets": [],
+    "attendees": []
+  },
+  {
+    "id": 2,
+    "organizationId": "org-2001",
+    "title": "کارگاه طراحی UI/UX",
+    "slug": "workshop-uiux-design-1404",
+    "category": "design",
+    "description": "کارگاه عملی طراحی رابط کاربری و تجربه کاربری",
+    "summary": "کارگاه عملی طراحی UI/UX",
+    "startAt": "2024-10-28T10:00:00+03:30",
+    "endAt": "2024-10-28T16:00:00+03:30",
+    "timezone": "Asia/Tehran",
+    "recurrence": null,
+    "type": "VIRTUAL",
+    "location": null,
+    "virtualUrl": "https://meet.example.com/uiux",
+    "status": "PUBLISHED",
+    "team": [
+      {
+        "userId": "u-2001",
+        "role": "COORGANIZER",
+        "permissions": ["EDIT"],
+        "assignedAt": "2024-09-12T00:00:00Z"
+      }
+    ],
+    "settings": {
+      "maxCapacity": 100,
+      "allowWaitlist": true,
+      "requireApproval": false,
+      "checkInRequired": false,
+      "allowCancel": true,
+      "cancelDeadline": "2024-10-26T23:59:59+03:30",
+      "emailNotifications": true,
+      "smsNotifications": false,
+      "publicRegistration": true,
+      "password": null,
+      "customFields": []
+    },
+    "branding": {
+      "logo": "https://example.com/logos/uiux-workshop.png",
+      "banner": "https://example.com/banners/uiux-workshop.jpg",
+      "primaryColor": "#8b5cf6",
+      "secondaryColor": "#7c3aed",
+      "favicon": "https://example.com/favicons/uiux-workshop.ico"
+    },
+    "seo": {
+      "metaTitle": "کارگاه طراحی UI/UX 1404 - آموزش عملی",
+      "metaDescription": "کارگاه عملی طراحی رابط کاربری و تجربه کاربری با تمرین‌های پروژه‌محور",
+      "keywords": ["UI/UX", "طراحی رابط کاربری", "کارگاه", "طراحی", "user experience"],
+      "ogImage": "https://example.com/og-images/uiux-workshop.jpg",
+      "canonical": "https://example.com/events/workshop-uiux-design-1404"
+    },
+    "stats": {
+      "totalAttendees": 80,
+      "checkedInAttendees": 0,
+      "totalTicketsSold": 80,
+      "totalRevenue": 16000000,
+      "currency": "IRR",
+      "views": 890,
+      "shares": 32
+    },
+    "createdAt": "2024-09-10T00:00:00Z",
+    "updatedAt": "2024-10-05T00:00:00Z",
+    "publishedAt": "2024-10-01T00:00:00Z",
+    "tasks": [],
+    "sessions": [],
+    "tickets": [],
+    "attendees": []
+  },
+  {
+    "id": 3,
+    "organizationId": "org-3001",
+    "title": "همایش بازاریابی دیجیتال",
+    "slug": "digital-marketing-summit-1404",
+    "category": "marketing",
+    "description": "همایش تخصصی بازاریابی دیجیتال و شبکه‌های اجتماعی",
+    "summary": "همایش بازاریابی دیجیتال",
+    "startAt": "2024-09-16T14:00:00+03:30",
+    "endAt": "2024-09-16T20:00:00+03:30",
+    "timezone": "Asia/Tehran",
+    "recurrence": null,
+    "type": "VIRTUAL",
+    "location": null,
+    "virtualUrl": "https://meet.example.com/digital-marketing",
+    "status": "ENDED",
+    "team": [
+      {
+        "userId": "u-3001",
+        "role": "STAFF",
+        "permissions": ["SUPPORT"],
+        "assignedAt": "2024-08-20T00:00:00Z"
+      }
+    ],
+    "settings": {
+      "maxCapacity": 300,
+      "allowWaitlist": false,
+      "requireApproval": false,
+      "checkInRequired": true,
+      "allowCancel": false,
+      "cancelDeadline": null,
+      "emailNotifications": true,
+      "smsNotifications": true,
+      "publicRegistration": true,
+      "password": null,
+      "customFields": []
+    },
+    "branding": {
+      "logo": "https://example.com/logos/digital-marketing.png",
+      "banner": "https://example.com/banners/digital-marketing.jpg",
+      "primaryColor": "#ec4899",
+      "secondaryColor": "#db2777",
+      "favicon": "https://example.com/favicons/digital-marketing.ico"
+    },
+    "seo": {
+      "metaTitle": "همایش بازاریابی دیجیتال 1404 - شبکه‌های اجتماعی",
+      "metaDescription": "همایش تخصصی بازاریابی دیجیتال و شبکه‌های اجتماعی با حضور متخصصان برجسته",
+      "keywords": ["بازاریابی دیجیتال", "دیجیتال مارکتینگ", "شبکه‌های اجتماعی", "همایش", "marketing"],
+      "ogImage": "https://example.com/og-images/digital-marketing.jpg",
+      "canonical": "https://example.com/events/digital-marketing-summit-1404"
+    },
+    "stats": {
+      "totalAttendees": 250,
+      "checkedInAttendees": 180,
+      "totalTicketsSold": 250,
+      "totalRevenue": 0,
+      "currency": "IRR",
+      "views": 2100,
+      "shares": 78
+    },
+    "createdAt": "2024-08-01T00:00:00Z",
+    "updatedAt": "2024-09-16T00:00:00Z",
+    "publishedAt": "2024-08-15T00:00:00Z",
+    "tasks": [],
+    "sessions": [],
+    "tickets": [],
+    "attendees": []
+  },
+  {
+    "id": 4,
+    "organizationId": "org-4001",
+    "title": "رویداد فناوری آینده",
+    "slug": "future-tech-event-1404",
+    "category": "technology",
+    "description": "رویداد ویژه فناوری‌های نوین و هوش مصنوعی",
+    "summary": "رویداد فناوری و هوش مصنوعی",
+    "startAt": "2024-10-10T09:00:00+03:30",
+    "endAt": "2024-10-10T17:00:00+03:30",
+    "timezone": "Asia/Tehran",
+    "recurrence": null,
+    "type": "HYBRID",
+    "location": {
+      "address": "شیراز، پارک علم و فناوری",
+      "city": "شیراز",
+      "province": "فارس",
+      "country": "ایران",
+      "venue": "سالن اصلی",
+      "lat": 29.5918,
+      "lng": 52.5836,
+      "directions": "ورودی اصلی پارک علم و فناوری، ساختمان مرکزی، سالن اصلی"
+    },
+    "virtualUrl": "https://meet.example.com/future-tech",
+    "status": "PUBLISHED",
+    "team": [
+      {
+        "userId": "u-4001",
+        "role": "ORGANIZER",
+        "permissions": ["ALL"],
+        "assignedAt": "2024-09-06T00:00:00Z"
+      }
+    ],
+    "settings": {
+      "maxCapacity": 400,
+      "allowWaitlist": true,
+      "requireApproval": false,
+      "checkInRequired": true,
+      "allowCancel": true,
+      "cancelDeadline": "2024-10-08T23:59:59+03:30",
+      "emailNotifications": true,
+      "smsNotifications": true,
+      "publicRegistration": true,
+      "password": null,
+      "customFields": []
+    },
+    "branding": {
+      "logo": "https://example.com/logos/future-tech.png",
+      "banner": "https://example.com/banners/future-tech.jpg",
+      "primaryColor": "#10b981",
+      "secondaryColor": "#059669",
+      "favicon": "https://example.com/favicons/future-tech.ico"
+    },
+    "seo": {
+      "metaTitle": "رویداد فناوری آینده 1404 - هوش مصنوعی و فناوری‌های نوین",
+      "metaDescription": "رویداد ویژه فناوری‌های نوین و هوش مصنوعی با حضور پیشگامان صنعت",
+      "keywords": ["هوش مصنوعی", "فناوری", "AI", "future tech", "تکنولوژی"],
+      "ogImage": "https://example.com/og-images/future-tech.jpg",
+      "canonical": "https://example.com/events/future-tech-event-1404"
+    },
+    "stats": {
+      "totalAttendees": 300,
+      "checkedInAttendees": 0,
+      "totalTicketsSold": 180,
+      "totalRevenue": 54000000,
+      "currency": "IRR",
+      "views": 1850,
+      "shares": 65
+    },
+    "createdAt": "2024-09-05T00:00:00Z",
+    "updatedAt": "2024-09-20T00:00:00Z",
+    "publishedAt": "2024-09-12T00:00:00Z",
+    "tasks": [],
+    "sessions": [],
+    "tickets": [],
+    "attendees": []
+  }
+]
+
+

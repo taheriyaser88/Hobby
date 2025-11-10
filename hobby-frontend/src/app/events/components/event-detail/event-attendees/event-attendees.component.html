@@ -1,0 +1,32 @@
+<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+        <h4>شرکت‌کنندگان</h4>
+        <div>
+            <input placeholder="جستجو در شرکت‌کنندگان..." style="padding:8px;border-radius:8px;border:1px solid #eee" #searchInput (input)="searchAttendees(searchInput.value)">
+            <button class="btn secondary" (click)="exportAttendees()">خروجی Excel</button>
+        </div>
+    </div>
+    <table style="margin-top:12px" *ngIf="filteredAttendees.length > 0; else noAttendees">
+        <thead><tr><th>نام</th><th>ایمیل</th><th>نوع بلیت</th><th>وضعیت پرداخت</th><th>چک‌این</th></tr></thead>
+        <tbody>
+        <tr *ngFor="let attendee of filteredAttendees" [attr.data-name]="attendee.fullName || ''">
+            <td>{{ attendee.fullName || '—' }}</td>
+            <td>{{ attendee.email || '—' }}</td>
+            <td>{{ attendee.ticketName || '—' }}</td>
+            <td>
+                <span [class]="'badge ' + (attendee.paymentStatus === 'PAID' ? 'green' : 'gray')">
+                    {{ attendee.paymentStatus === 'PAID' ? 'پرداخت شد' : 'در انتظار' }}
+                </span>
+            </td>
+            <td>
+                <button class="btn" [class.checked-in]="attendee.checkedIn" (click)="toggleCheckin(attendee)">
+                    {{ attendee.checkedIn ? 'حضور ثبت شد' : 'چک‌این' }}
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <ng-template #noAttendees>
+        <p class="small" style="margin-top:12px;text-align:center;color:#777">هنوز شرکت‌کننده‌ای ثبت نشده است.</p>
+    </ng-template>
+</div>

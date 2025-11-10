@@ -1,0 +1,65 @@
+<div class="users-container">
+    <header class="users-header">
+        <h1>کاربران</h1>
+    </header>
+
+    <div class="header-actions">
+        <button class="add-btn" routerLink="/users/new">
+            <span class="add-icon">➕</span>
+        </button>
+        <div class="search-bar">
+            <input 
+                type="text" 
+                placeholder="جستجوی کاربر (نام، ایمیل، تلفن، نقش، وضعیت)..." 
+                [(ngModel)]="searchTerm" 
+                (ngModelChange)="onSearch($event)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </div>
+
+
+    <div class="users-table-container">
+        <table *ngIf="filteredUsers.length > 0">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>ایمیل</th>
+                    <th>تلفن</th>
+                    <th>نقش</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of filteredUsers" (click)="viewUser(user)" style="cursor: pointer;">
+                    <td>{{ user.fullName }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone || '—' }}</td>
+                    <td>
+                        <span class="chip" [ngClass]="getRoleClass(user.role)">
+                            {{ getRoleText(user.role) }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status" [ngClass]="getStatusClass(user.status)">
+                            {{ getStatusText(user.status) }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-edit" (click)="editUser(user, $event)">ویرایش</button>
+                        <button class="btn-delete" (click)="deleteUser(user); $event.stopPropagation()">حذف</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="empty-state" *ngIf="filteredUsers.length === 0">
+            <p>{{ searchTerm ? 'کاربری یافت نشد' : 'هنوز کاربری اضافه نشده است' }}</p>
+            <button routerLink="/users/new" class="btn" *ngIf="!searchTerm">افزودن کاربر جدید</button>
+        </div>
+    </div>
+</div>
+
+

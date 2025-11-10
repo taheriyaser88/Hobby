@@ -1,0 +1,69 @@
+<div class="event-form-page">
+    <header class="form-header">
+        <h1>{{ isEditMode ? 'ویرایش رویداد' : 'ایجاد رویداد جدید' }}</h1>
+        <p>{{ isEditMode ? 'اطلاعات رویداد را ویرایش کنید' : 'اطلاعات رویداد خود را وارد کنید' }}</p>
+    </header>
+
+    <form (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>عنوان رویداد *</label>
+                <input type="text" [(ngModel)]="event.title" name="title" required placeholder="مثال: همایش فناوری 1404">
+            </div>
+
+            <div class="form-group">
+                <label>دسته‌بندی</label>
+                <select [(ngModel)]="event.category" name="category">
+                    <option value="">انتخاب کنید</option>
+                    <option value="technology">فناوری</option>
+                    <option value="business">کسب‌وکار</option>
+                    <option value="education">آموزش</option>
+                    <option value="marketing">بازاریابی</option>
+                    <option value="design">طراحی</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>محل برگزاری *</label>
+                <input type="text" [(ngModel)]="event.location" name="location" required placeholder="مثال: تهران، برج میلاد">
+            </div>
+
+            <div class="form-group">
+                <label>تاریخ شمسی *</label>
+                <div class="date-input-group">
+                    <input type="text" [(ngModel)]="event.persianDay" name="persianDay" required placeholder="روز" maxlength="2" style="width: 60px; direction: rtl;">
+                    <span>/</span>
+                    <input type="text" [(ngModel)]="event.persianMonth" name="persianMonth" required placeholder="ماه" maxlength="2" style="width: 60px; direction: rtl;">
+                    <span>/</span>
+                    <input type="text" [(ngModel)]="event.persianYear" name="persianYear" required placeholder="سال" maxlength="4" style="width: 80px; direction: rtl;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>زمان</label>
+                <input type="time" [(ngModel)]="event.time" name="time">
+            </div>
+
+            <div class="form-group">
+                <label>ظرفیت</label>
+                <input type="number" [(ngModel)]="event.capacity" name="capacity" placeholder="تعداد شرکت‌کنندگان">
+            </div>
+
+            <div class="form-group full-width">
+                <label>توضیحات</label>
+                <textarea [(ngModel)]="event.description" name="description" rows="4" placeholder="توضیحات کامل رویداد..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>قیمت بلیت (تومان)</label>
+                <input type="number" [(ngModel)]="event.price" name="price" placeholder="0">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="cancel()">انصراف</button>
+            <button type="submit" class="btn-submit">{{ isEditMode ? 'ذخیره تغییرات' : 'ایجاد رویداد' }}</button>
+        </div>
+    </form>
+</div>
+

@@ -1,0 +1,78 @@
+<!-- Modal برای نمایش جزئیات وظیفه -->
+<div *ngIf="task" class="modal-overlay" (click)="onBack()">
+  <div class="modal-content view-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>جزئیات وظیفه</h3>
+      <button class="modal-close" (click)="onBack()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="task-details">
+        <div class="detail-row">
+          <div class="detail-label">عنوان:</div>
+          <div class="detail-value">{{ task.title || '—' }}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">وضعیت:</div>
+          <div class="detail-value">
+            <span class="status-badge" [class]="'status-' + task.status">
+              {{ getStatusText(task.status) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-row" *ngIf="task.assignee">
+          <div class="detail-label">مسئول:</div>
+          <div class="detail-value">{{ task.assignee }}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">اولویت:</div>
+          <div class="detail-value">
+            <span class="priority-badge" [class]="'priority-' + task.priority">
+              {{ getPriorityText(task.priority) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-row" *ngIf="task.description">
+          <div class="detail-label">توضیحات:</div>
+          <div class="detail-value">{{ task.description }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="task.dueDate">
+          <div class="detail-label">تاریخ سررسید:</div>
+          <div class="detail-value">{{ getDueDate(task.dueDate) }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="task.progress !== undefined && task.progress !== null">
+          <div class="detail-label">پیشرفت:</div>
+          <div class="detail-value">
+            <div class="progress-bar-container">
+              <div class="progress-bar" [style.width.%]="task.progress">
+                <span class="progress-text">{{ task.progress }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-row" *ngIf="task.createdAt">
+          <div class="detail-label">تاریخ ایجاد:</div>
+          <div class="detail-value">{{ getCreatedDate(task.createdAt) }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="task.updatedAt">
+          <div class="detail-label">آخرین به‌روزرسانی:</div>
+          <div class="detail-value">{{ getUpdatedDate(task.updatedAt) }}</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn secondary" (click)="onEdit()">ویرایش</button>
+        <button type="button" class="btn" style="background: var(--danger);" (click)="onDelete()">حذف</button>
+        <button type="button" class="btn" (click)="onBack()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+

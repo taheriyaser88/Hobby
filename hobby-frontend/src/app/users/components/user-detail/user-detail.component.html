@@ -1,0 +1,62 @@
+<!-- Modal برای نمایش جزئیات کاربر -->
+<div *ngIf="user" class="modal-overlay" (click)="onBack()">
+  <div class="modal-content view-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>جزئیات کاربر</h3>
+      <button class="modal-close" (click)="onBack()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="user-details">
+        <div class="detail-row">
+          <div class="detail-label">نام کامل:</div>
+          <div class="detail-value">{{ user.fullName }}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">ایمیل:</div>
+          <div class="detail-value">{{ user.email }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="user.phone">
+          <div class="detail-label">شماره تلفن:</div>
+          <div class="detail-value">{{ user.phone }}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">نقش:</div>
+          <div class="detail-value">
+            <span class="chip" [ngClass]="getRoleClass(user.role)">
+              {{ getRoleText(user.role) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">وضعیت:</div>
+          <div class="detail-value">
+            <span class="status" [ngClass]="getStatusClass(user.status)">
+              {{ getStatusText(user.status) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="detail-row" *ngIf="user.createdAt">
+          <div class="detail-label">تاریخ ایجاد:</div>
+          <div class="detail-value">{{ getCreatedDate(user.createdAt) }}</div>
+        </div>
+
+        <div class="detail-row" *ngIf="user.updatedAt">
+          <div class="detail-label">آخرین به‌روزرسانی:</div>
+          <div class="detail-value">{{ getUpdatedDate(user.updatedAt) }}</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn secondary" (click)="onEdit()">ویرایش</button>
+        <button type="button" class="btn" style="background: var(--danger);" (click)="onDelete()">حذف</button>
+        <button type="button" class="btn" (click)="onBack()">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,24 @@
+<div class="events-page">
+    <header>
+        <h2>رویدادهای من</h2>
+    </header>
+
+    <div class="header-actions">
+        <button class="add-btn" routerLink="/events/new"><span class="add-icon">➕</span></button>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="جستجو در میان رویدادها..." [(ngModel)]="searchTerm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </div>
+
+    <section class="events-grid" id="eventsGrid">
+                <app-event-card *ngFor="let event of filteredEvents" [event]="event" [showRouterLink]="false"></app-event-card>
+    </section>
+
+    <div id="noResult" class="no-events" *ngIf="!hasResults && searchTerm">
+        😕 هیچ رویدادی پیدا نشد
+    </div>
+</div>
+

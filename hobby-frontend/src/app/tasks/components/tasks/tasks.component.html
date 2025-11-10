@@ -1,0 +1,30 @@
+<div class="tasks-container">
+    <header class="tasks-header">
+        <h1>وظایف</h1>
+        <button class="btn-create" routerLink="/tasks/new">➕ ایجاد وظیفه جدید</button>
+    </header>
+
+    <div class="search-bar">
+        <input 
+            type="text" 
+            placeholder="جستجوی وظیفه..." 
+            [(ngModel)]="searchTerm" 
+            (ngModelChange)="onSearch($event)"
+            class="search-input">
+    </div>
+
+    <div class="tasks-grid">
+        <app-task-card 
+            *ngFor="let task of filteredTasks" 
+            [task]="task" 
+            (delete)="deleteTask($event)"
+            (click)="viewTask(task)">
+        </app-task-card>
+        
+        <div class="empty-state" *ngIf="filteredTasks.length === 0">
+            <p>وظیفه‌ای یافت نشد</p>
+            <button routerLink="/tasks/new" class="btn-create">ایجاد وظیفه جدید</button>
+        </div>
+    </div>
+</div>
+

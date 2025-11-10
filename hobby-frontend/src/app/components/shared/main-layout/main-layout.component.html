@@ -1,0 +1,26 @@
+<app-navbar></app-navbar>
+
+<div class="page-wrapper">
+    <aside>
+        <div class="sidebar-header">
+            <div class="sidebar-breadcrumb">
+                <span class="breadcrumb-home" (click)="router.navigate(['/dashboard'])">سامانه مدیریت رویداد</span>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current">{{ getCurrentPageName() }}</span>
+            </div>
+        </div>
+        <nav>
+            <a routerLink="/dashboard" [class.active]="isActive('/dashboard')">داشبورد</a>
+            <a routerLink="/events" [class.active]="isActive('/events')">رویدادها</a>
+            <a routerLink="/tasks" [class.active]="isActive('/tasks')">وظایف</a>
+            <a routerLink="/users" [class.active]="isActive('/users')">کاربران</a>
+            <a href="#" (click)="onClickComingSoon($event)">تقویم</a>
+            <a href="#" (click)="onClickComingSoon($event)">تحلیل‌ها</a>
+        </nav>
+    </aside>
+
+    <main>
+        <router-outlet></router-outlet>
+    </main>
+</div>
+
