@@ -32,6 +32,7 @@
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/model/common/TaskStatus.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/controller/CategoryController.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/model/task/Task.java
+/home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/service/auth/JwtService.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/repository/task/TaskDependencyRepository.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/App.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/model/comment/Comment.java
@@ -51,6 +52,7 @@
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/exception/ResourceNotFoundException.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/service/notification/ReminderService.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/exception/ErrorResponse.java
+/home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/config/JwtAuthenticationFilter.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/dto/task/TaskDependencyResponse.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/model/user/Permission.java
 /home/sina/Projects/Hobby/hobby-backend/src/main/java/com/hobby/model/user/User.java

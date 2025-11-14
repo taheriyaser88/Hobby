@@ -33,8 +33,8 @@ public class User extends BaseEntity {
     @Column(name = "profile_picture")
     private String profilePicture;
     
-    @Size(max = 20)
-    @Column(name = "google_id", unique = true)
+    @Size(max = 50)
+    @Column(name = "google_id", unique = true, length = 50)
     private String googleId;
     
     @Size(max = 20)

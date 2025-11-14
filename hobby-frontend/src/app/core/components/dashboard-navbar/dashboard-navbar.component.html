@@ -1,0 +1,148 @@
+<header class="dashboard-navbar">
+  <div class="navbar-container">
+    <!-- Logo Section -->
+    <div class="navbar-left">
+      <a routerLink="/dashboard" class="logo-link">
+        <img src="/EventMeventLogo.svg" alt="Event Mevent Logo" class="navbar-logo" />
+      </a>
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+        <span class="hamburger-icon">☰</span>
+      </button>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <nav class="navbar-nav desktop-only">
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        داشبورد
+      </a>
+      <a routerLink="/dashboard/events" routerLinkActive="active">
+        رویدادها
+      </a>
+      <a routerLink="/dashboard/tasks" routerLinkActive="active">
+        وظایف
+      </a>
+      <a routerLink="/dashboard/calendar" routerLinkActive="active">
+        تقویم
+      </a>
+      <a routerLink="/dashboard/analytics" routerLinkActive="active">
+        تحلیل‌ها
+      </a>
+    </nav>
+
+    <!-- User Menu Section -->
+    <div class="navbar-right">
+      <!-- User Avatar & Name -->
+      <div class="user-menu-wrapper" #userMenuWrapper>
+        <button class="user-menu-trigger" (click)="toggleUserMenu($event)" aria-label="User menu">
+          <div class="user-avatar">
+            @if (user()?.avatarUrl) {
+              <img [src]="user()?.avatarUrl" [alt]="getUserDisplayName()" />
+            } @else {
+              <span class="user-initials">{{ getUserInitials() }}</span>
+            }
+          </div>
+          <span class="user-name desktop-only">{{ getUserDisplayName() }}</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+
+        <!-- User Dropdown Menu -->
+        @if (showUserMenu()) {
+          <div class="user-dropdown">
+            <div class="user-dropdown-header">
+              <div class="user-avatar-large">
+                @if (user()?.avatarUrl) {
+                  <img [src]="user()?.avatarUrl" [alt]="getUserDisplayName()" />
+                } @else {
+                  <span class="user-initials-large">{{ getUserInitials() }}</span>
+                }
+              </div>
+              <div class="user-info">
+                <div class="user-name-large">{{ getUserDisplayName() }}</div>
+                @if (user()?.email) {
+                  <div class="user-email">{{ user()?.email }}</div>
+                }
+              </div>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <a routerLink="/dashboard/profile" class="user-dropdown-item" (click)="closeUserMenu(); $event.stopPropagation()">
+              <span class="item-icon">👤</span>
+              <span>پروفایل</span>
+            </a>
+            <a routerLink="/dashboard/settings" class="user-dropdown-item" (click)="closeUserMenu(); $event.stopPropagation()">
+              <span class="item-icon">⚙️</span>
+              <span>تنظیمات</span>
+            </a>
+            <div class="user-dropdown-divider"></div>
+            <button class="user-dropdown-item logout" (click)="closeUserMenu(); onLogout(); $event.stopPropagation()">
+              <span class="item-icon">🚪</span>
+              <span>خروج</span>
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  @if (showMobileMenu()) {
+    <div class="mobile-menu-overlay" (click)="closeMobileMenu()"></div>
+    <div class="mobile-menu">
+      <div class="mobile-menu-header">
+        <div class="mobile-user-info">
+          <div class="user-avatar">
+            @if (user()?.avatarUrl) {
+              <img [src]="user()?.avatarUrl" [alt]="getUserDisplayName()" />
+            } @else {
+              <span class="user-initials">{{ getUserInitials() }}</span>
+            }
+          </div>
+          <div class="mobile-user-details">
+            <div class="user-name">{{ getUserDisplayName() }}</div>
+            @if (user()?.email) {
+              <div class="user-email">{{ user()?.email }}</div>
+            }
+          </div>
+        </div>
+        <button class="mobile-menu-close" (click)="closeMobileMenu()" aria-label="Close menu">
+          ✕
+        </button>
+      </div>
+      <nav class="mobile-nav">
+        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+          <span class="nav-icon">📊</span>
+          <span>داشبورد</span>
+        </a>
+        <a routerLink="/dashboard/events" routerLinkActive="active" (click)="closeMobileMenu()">
+          <span class="nav-icon">📅</span>
+          <span>رویدادها</span>
+        </a>
+        <a routerLink="/dashboard/tasks" routerLinkActive="active" (click)="closeMobileMenu()">
+          <span class="nav-icon">✅</span>
+          <span>وظایف</span>
+        </a>
+        <a routerLink="/dashboard/calendar" routerLinkActive="active" (click)="closeMobileMenu()">
+          <span class="nav-icon">📆</span>
+          <span>تقویم</span>
+        </a>
+        <a routerLink="/dashboard/analytics" routerLinkActive="active" (click)="closeMobileMenu()">
+          <span class="nav-icon">📈</span>
+          <span>تحلیل‌ها</span>
+        </a>
+        <div class="mobile-nav-divider"></div>
+        <a routerLink="/dashboard/profile" (click)="closeMobileMenu()">
+          <span class="nav-icon">👤</span>
+          <span>پروفایل</span>
+        </a>
+        <a routerLink="/dashboard/settings" (click)="closeMobileMenu()">
+          <span class="nav-icon">⚙️</span>
+          <span>تنظیمات</span>
+        </a>
+        <button class="mobile-nav-logout" (click)="onLogout()">
+          <span class="nav-icon">🚪</span>
+          <span>خروج</span>
+        </button>
+      </nav>
+    </div>
+  }
+</header>
+

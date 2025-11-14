@@ -1,0 +1,316 @@
+@import url('https://cdn.jsdelivr.net/npm/vazirmatn@33.003/Variable/woff2/IR.css');
+
+:root {
+  --color-primary: #1a73e8;
+  --color-secondary: #f9a825;
+  --color-success: #34a853;
+  --color-danger: #ea4335;
+  --color-text: #222222;
+  --color-muted: #777777;
+  --color-surface: #ffffff;
+  --color-background: #f5f6fa;
+  --shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.04);
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --gap-base: 1rem;
+  --font-base: 'Vazirmatn', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-base);
+  direction: rtl;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+button[nz-button] {
+  border-radius: 8px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: inherit;
+}
+
+button[nz-button][nzType='primary'],
+button[nz-button][nzType='primary'] span,
+button[nz-button][nzType='primary'] .ant-btn-loading-icon {
+  background-color: var(--color-primary) !important;
+  color: #fff !important;
+  border-color: var(--color-primary) !important;
+}
+
+button[nz-button][nzType='primary']:hover,
+button[nz-button][nzType='primary']:hover span {
+  background-color: #155ec0 !important;
+  color: #fff !important;
+}
+
+button[nz-button].btn-secondary {
+  color: var(--color-primary);
+  border-color: rgba(26, 115, 232, 0.18);
+}
+
+.app-surface {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.app-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.layout-full-height {
+  min-height: 100vh;
+}
+
+.google-btn-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+// ============================================
+// Nz-Message (Toast) Styles - تک‌خطی رنگی RTL
+// ============================================
+// استایل‌های global برای ant-message - تک‌خطی با بک‌گراند رنگی
+// Single-line colored toast messages with RTL support
+
+// Container position - top-right for RTL (بالا-راست در RTL)
+// NG-ZORRO در RTL از right استفاده می‌کند، بنابراین باید right تنظیم کنیم
+.ant-message {
+  position: fixed !important;
+  top: 24px !important;
+  right: 24px !important; // در RTL، right به معنای سمت راست است
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 9999 !important;
+  direction: rtl !important;
+  font-family: var(--font-base) !important;
+  pointer-events: none !important;
+  
+  // Animation optimization
+  will-change: transform;
+}
+
+// Message notice - تک‌خطی بدون باکس سفید
+.ant-message-notice {
+  pointer-events: auto !important;
+  margin-bottom: 8px !important;
+  
+  // Hardware acceleration for smooth animation
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  
+  // Remove default white box styling
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 0 8px 0 !important;
+}
+
+// Message content container - تک‌خطی
+.ant-message-notice-content {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 20px !important;
+  border-radius: 6px !important;
+  font-family: var(--font-base) !important;
+  direction: rtl !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  white-space: nowrap !important; // تک‌خطی
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  animation: slideInFromRight 0.3s ease-out !important;
+  
+  // Remove default padding/margin
+  margin: 0 !important;
+  min-width: auto !important;
+  max-width: none !important;
+}
+
+// Success message - بک‌گراند سبز
+.ant-message-success .ant-message-notice-content {
+  background-color: #52c41a !important; // سبز success
+  color: #fff !important;
+  border: none !important;
+}
+
+.ant-message-success .anticon-check-circle {
+  color: #fff !important;
+  font-size: 16px !important;
+  margin: 0 !important;
+}
+
+// Error message - بک‌گراند قرمز
+.ant-message-error .ant-message-notice-content {
+  background-color: #ff4d4f !important; // قرمز error
+  color: #fff !important;
+  border: none !important;
+}
+
+.ant-message-error .anticon-close-circle {
+  color: #fff !important;
+  font-size: 16px !important;
+  margin: 0 !important;
+}
+
+// Info message - بک‌گراند آبی
+.ant-message-info .ant-message-notice-content {
+  background-color: #1890ff !important; // آبی info
+  color: #fff !important;
+  border: none !important;
+}
+
+.ant-message-info .anticon-info-circle {
+  color: #fff !important;
+  font-size: 16px !important;
+  margin: 0 !important;
+}
+
+// Warning message - بک‌گراند نارنجی
+.ant-message-warning .ant-message-notice-content {
+  background-color: #faad14 !important; // نارنجی warning
+  color: #fff !important;
+  border: none !important;
+}
+
+.ant-message-warning .anticon-exclamation-circle {
+  color: #fff !important;
+  font-size: 16px !important;
+  margin: 0 !important;
+}
+
+// Loading message - بک‌گراند آبی
+.ant-message-loading .ant-message-notice-content {
+  background-color: #1890ff !important; // آبی loading
+  color: #fff !important;
+  border: none !important;
+}
+
+.ant-message-loading .anticon-loading {
+  color: #fff !important;
+  font-size: 16px !important;
+  margin: 0 !important;
+}
+
+// Icon styling - آیکون کنار متن
+.ant-message-notice-content .anticon {
+  font-size: 16px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+// Text styling - متن فارسی
+.ant-message-custom-content {
+  color: #fff !important;
+  font-family: var(--font-base) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  direction: rtl !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important; // تک‌خطی
+}
+
+// Remove default icon wrapper padding
+.ant-message-notice-content > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+// Animation - از راست می‌آید (در RTL یعنی از چپ)
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Exit animation - به راست می‌رود (در RTL یعنی به چپ)
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+// Hide default message icon wrapper
+.ant-message-notice-content .ant-message-icon {
+  display: none !important;
+}
+
+// Remove default message custom content wrapper
+.ant-message-custom-content {
+  display: inline !important;
+}
+
+// Mobile adjustments
+@media (max-width: 768px) {
+  .ant-message {
+    top: 16px !important;
+    right: 16px !important;
+    left: 16px !important; // برای موبایل، از هر دو طرف فاصله بده
+  }
+  
+  .ant-message-notice-content {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    white-space: normal !important; // Allow wrapping on mobile
+    max-width: calc(100vw - 32px) !important;
+  }
+}
+

@@ -1,0 +1,50 @@
+<section class="login-container">
+  <div class="login-card">
+    <header class="login-header">
+      <div class="logo-container">
+        <img src="/EventMeventLogo.svg" alt="Event Mevent Logo" class="logo-image" />
+      </div>
+    </header>
+
+    <button
+      nz-button
+      nzType="primary"
+      nzBlock
+      class="google-login-btn"
+      [nzLoading]="loading()"
+      (click)="onGoogleLogin()"
+    >
+      <span class="google-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false" width="20" height="20">
+          <path
+            fill="#4285F4"
+            d="M23.04 12.261c0-.815-.074-1.596-.212-2.352H12v4.455h6.188c-.267 1.44-1.077 2.661-2.298 3.48v2.89h3.713c2.175-2.004 3.437-4.96 3.437-8.473z"
+          />
+          <path
+            fill="#34A853"
+            d="M12 24c3.24 0 5.957-1.079 7.943-2.936l-3.713-2.89c-1.032.69-2.356 1.096-4.23 1.096-3.253 0-6.012-2.196-6.996-5.147H1.203v3.217C3.178 21.532 7.272 24 12 24z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M5.004 14.123a7.214 7.214 0 010-4.245V6.661H1.203a11.977 11.977 0 000 10.678l3.801-3.216z"
+          />
+          <path
+            fill="#EA4335"
+            d="M12 4.75c1.763 0 3.344.606 4.59 1.795l3.441-3.441C17.945 1.136 15.228 0 12 0 7.272 0 3.178 2.468 1.203 6.661l3.801 3.217C5.988 6.946 8.747 4.75 12 4.75z"
+          />
+        </svg>
+      </span>
+      <span>ورود با گوگل</span>
+    </button>
+
+    <div class="divider">
+      <span>یا</span>
+    </div>
+
+    <footer class="login-footer">
+      <p>
+        با ورود، شرایط استفاده و سیاست حریم خصوصی را می‌پذیرید.
+      </p>
+    </footer>
+  </div>
+</section>

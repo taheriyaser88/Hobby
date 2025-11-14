@@ -9,9 +9,13 @@ import com.hobby.service.user.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,6 +31,56 @@ public class UserController {
 
     @Autowired
     private PermissionService permissionService;
+
+    // Get current authenticated user
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, Object>> getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Map<String, Object> profile = new HashMap<>();
+        
+        if (authentication.getPrincipal() instanceof OAuth2User) {
+            OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+            
+            // Extract user info from OAuth2User
+            String email = oauth2User.getAttribute("email");
+            String name = oauth2User.getAttribute("name");
+            String picture = oauth2User.getAttribute("picture");
+            String sub = oauth2User.getAttribute("sub"); // Google ID
+            
+            profile.put("id", sub != null ? sub : email);
+            profile.put("email", email);
+            profile.put("fullName", name);
+            profile.put("avatarUrl", picture);
+            
+            // Try to find user in database
+            if (email != null) {
+                Optional<User> dbUser = userService.findByEmail(email);
+                if (dbUser.isPresent()) {
+                    User user = dbUser.get();
+                    profile.put("id", user.getId());
+                    profile.put("fullName", user.getFirstName() + " " + user.getLastName());
+                    if (user.getProfilePicture() != null) {
+                        profile.put("avatarUrl", user.getProfilePicture());
+                    }
+                    // Add roles if needed
+                    if (!user.getRoles().isEmpty()) {
+                        profile.put("roles", user.getRoles().stream()
+                            .map(Role::getName)
+                            .toList());
+                    }
+                }
+            }
+        } else {
+            // Fallback for other authentication types
+            profile.put("id", authentication.getName());
+            profile.put("email", authentication.getName());
+        }
+        
+        return ResponseEntity.ok(profile);
+    }
 
     // Get all users
     @GetMapping

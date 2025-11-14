@@ -1,93 +1,59 @@
-# Event Manager UI
+# HobbyFrontend
 
-این پروژه، یک اپلیکیشن Angular است که از روی صفحات HTML تبدیل شده است.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.9.
 
-## ویژگی‌ها
+## Development server
 
-- صفحه لندینگ
-- صفحه ورود/ثبت‌نام
-- داشبورد
-- مدیریت رویدادها (لیست و جزئیات)
-- مدیریت تسک‌ها با Kanban
-- آنالیتیکس با Chart.js
-- اتصال به Google Calendar
-
-## نصب و راه‌اندازی
-
-### پیش‌نیازها
-
-- Node.js (نسخه 16 یا بالاتر)
-- npm یا yarn
-
-### نصب
-
-ابتدا وابستگی‌ها را نصب کنید:
+To start a local development server, run:
 
 ```bash
-npm install
-```
-
-### اجرا
-
-برای اجرای پروژه در حالت development:
-
-```bash
-npm start
-# یا
 ng serve
 ```
 
-سپس به آدرس http://localhost:4200 بروید.
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-اگر می‌خواهید روی پورت دیگری اجرا کنید:
+## Code scaffolding
 
-```bash
-ng serve --port 4201
-```
-
-## Build
-
-برای ساخت نسخه production:
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
 ```bash
-npm run build
+ng generate component component-name
 ```
 
-خروجی در پوشه `dist/event-manager-ui` قرار می‌گیرد.
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-## ساختار پروژه
-
-```
-src/
-├── app/
-│   ├── components/
-│   │   ├── landing/
-│   │   ├── login/
-│   │   ├── dashboard/
-│   │   ├── events/
-│   │   └── event-detail/
-│   ├── app.component.ts
-│   ├── app.module.ts
-│   └── app-routing.module.ts
-└── styles.css
+```bash
+ng generate --help
 ```
 
-## نکات
+## Building
 
-- این پروژه از Angular 17 استفاده می‌کند
-- فونت Vazirmatn برای نمایش فارسی
-- Chart.js برای نمودارها
-- تمام UIهای اصلی بدون تغییر از HTML های اولیه منتقل شده
+To build the project run:
 
-## مسیرها
+```bash
+ng build
+```
 
-- `/` - صفحه اصلی (Landing)
-- `/login` - ورود/ثبت‌نام
-- `/dashboard` - داشبورد
-- `/events` - لیست رویدادها
-- `/events/:id` - جزئیات رویداد
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## نسخه
+## Running unit tests
 
-Version 1.0.0
+To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
 
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

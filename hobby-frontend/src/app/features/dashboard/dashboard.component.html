@@ -1,0 +1,122 @@
+<div class="dashboard-layout">
+  <!-- Navbar -->
+  <app-dashboard-navbar></app-dashboard-navbar>
+
+  <!-- Main Content -->
+  <main class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>داشبورد شما</h1>
+      <button class="btn-create" (click)="onCreateEvent()">
+        <span class="btn-icon">➕</span>
+        <span>ایجاد رویداد جدید</span>
+      </button>
+    </header>
+
+  <!-- آمار -->
+  <section class="stats-grid">
+    <div class="stat-card stat-blue">
+      <div class="stat-icon">📅</div>
+      <h3>{{ stats().activeEvents }}</h3>
+      <p>رویداد فعال</p>
+    </div>
+    <div class="stat-card stat-orange">
+      <div class="stat-icon">✅</div>
+      <h3>{{ stats().pendingTasks }}</h3>
+      <p>وظیفه در انتظار</p>
+    </div>
+    <div class="stat-card stat-green">
+      <div class="stat-icon">🎯</div>
+      <h3>{{ stats().completedTasks }}</h3>
+      <p>وظیفه انجام شده</p>
+    </div>
+    <div class="stat-card stat-purple">
+      <div class="stat-icon">📊</div>
+      <h3>{{ stats().totalEvents }}</h3>
+      <p>کل رویدادها</p>
+    </div>
+  </section>
+
+  <div class="dashboard-content-grid">
+    <!-- رویدادها -->
+    <section class="events-section">
+      <div class="section-header">
+        <h2 class="section-title">رویدادهای شما</h2>
+        <button class="section-link" (click)="onViewAllEvents()">مشاهده همه</button>
+      </div>
+      <div class="event-list">
+        @if (loading()) {
+          <div class="loading-state">
+            <p>در حال بارگذاری...</p>
+          </div>
+        } @else if (recentEvents().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <p>هنوز رویدادی ایجاد نشده است</p>
+            <button class="btn-empty" (click)="onCreateEvent()">
+              ایجاد رویداد جدید
+            </button>
+          </div>
+        } @else {
+          @for (event of recentEvents(); track event.id) {
+            <div class="event-card" (click)="onViewEvent(event.id)">
+              <div class="event-header">
+                <h4>{{ event.title }}</h4>
+                <span class="event-status">فعال</span>
+              </div>
+              @if (event.description) {
+                <p class="event-description">{{ event.description }}</p>
+              }
+              <div class="event-meta">
+                <span class="event-date">
+                  📅 {{ formatDate(event.startTime) }}
+                </span>
+                @if (event.location) {
+                  <span class="event-location">📍 {{ event.location }}</span>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </section>
+
+    <!-- وظایف اخیر -->
+    <section class="tasks-section">
+      <div class="section-header">
+        <h2 class="section-title">آخرین وظایف</h2>
+        <button class="section-link" (click)="onViewAllTasks()">مشاهده همه</button>
+      </div>
+      <div class="tasks-list">
+        @if (loading()) {
+          <div class="loading-state">
+            <p>در حال بارگذاری...</p>
+          </div>
+        } @else if (recentTasks().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <p>هنوز وظیفه‌ای ایجاد نشده است</p>
+            <button class="btn-empty" (click)="onCreateTask()">
+              ایجاد وظیفه جدید
+            </button>
+          </div>
+        } @else {
+          @for (task of recentTasks(); track task.id) {
+            <div class="task-item" (click)="onViewTask(task.id)">
+              <div class="task-content">
+                <h4>{{ task.title }}</h4>
+                @if (task.description) {
+                  <p class="task-description">{{ task.description }}</p>
+                }
+              </div>
+              <span class="status" [ngClass]="getStatusClass(task.status)">
+                {{ task.status === 'PENDING' ? 'در انتظار' : task.status === 'IN_PROGRESS' ? 'در حال انجام' : 'انجام شده' }}
+              </span>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  </div>
+  </main>
+</div>
+
