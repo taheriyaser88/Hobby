@@ -1,15 +1,15 @@
 package com.hobby.controller;
 
+import com.hobby.dto.auth.GoogleSyncRequest;
+import com.hobby.dto.auth.GoogleSyncResponse;
 import com.hobby.model.user.User;
 import com.hobby.service.auth.JwtService;
 import com.hobby.service.user.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +30,59 @@ public class AuthController {
         return "Auth controller is working!";
     }
 
+    /**
+     * POST /api/auth/google-sync
+     * Sync Google OAuth user with backend
+     * - If user exists: return existing user with saved role
+     * - If user doesn't exist: create new user with USER role
+     * - Returns user + JWT token (token includes role)
+     */
+    @PostMapping("/google-sync")
+    public ResponseEntity<GoogleSyncResponse> googleSync(@Valid @RequestBody GoogleSyncRequest request) {
+        // Try to find existing user by email
+        Optional<User> existingUserOpt = userService.findUserByEmail(request.getEmail());
+        
+        User user;
+        if (existingUserOpt.isPresent()) {
+            // User exists - update if needed (avatar, fullName)
+            user = existingUserOpt.get();
+            user = userService.updateUserIfNeeded(
+                user,
+                request.getName(),
+                request.getPicture()
+            );
+        } else {
+            // User doesn't exist - create new user with USER role
+            user = userService.createGoogleUser(
+                request.getEmail(),
+                request.getName(),
+                request.getPicture()
+            );
+        }
+        
+        // Generate JWT token with role
+        String token = jwtService.generateToken(
+            user.getId(),
+            user.getEmail(),
+            user.getFullName(),
+            user.getRole()
+        );
+        
+        // Create response DTO
+        GoogleSyncResponse.UserData userData = new GoogleSyncResponse.UserData(
+            user.getId().toString(),
+            user.getFullName(),
+            user.getEmail(),
+            user.getAvatar(),
+            user.getRole(),
+            user.getCreatedAt()
+        );
+        
+        GoogleSyncResponse response = new GoogleSyncResponse(userData, token);
+        
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<Map<String, Object>> getCurrentUser(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -46,9 +99,9 @@ public class AuthController {
                 User user = dbUser.get();
                 profile.put("id", user.getId());
                 profile.put("email", user.getEmail());
-                profile.put("fullName", user.getFirstName() + " " + user.getLastName());
-                if (user.getProfilePicture() != null) {
-                    profile.put("avatarUrl", user.getProfilePicture());
+                profile.put("fullName", user.getFullName());
+                if (user.getAvatar() != null) {
+                    profile.put("avatarUrl", user.getAvatar());
                 }
             } else {
                 // Fallback: use authentication name

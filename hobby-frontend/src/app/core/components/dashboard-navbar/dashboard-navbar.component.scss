@@ -66,7 +66,7 @@
 }
 
 .navbar-logo {
-  width: 36px;
+  width: 45px;
   height: 36px;
   object-fit: contain;
   display: block;
@@ -288,6 +288,11 @@
 .user-info {
   flex: 1;
   min-width: 0;
+}
+
+.user-dropdown{
+  left: 0;
+  right: unset !important;
 }
 
 .user-name-large {
@@ -544,7 +549,7 @@
   }
 
   .navbar-logo {
-    width: 40px;
+    width: 75px;
     height: 40px;
   }
 
@@ -588,4 +593,3 @@
     }
   }
 }
-

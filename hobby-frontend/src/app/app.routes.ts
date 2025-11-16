@@ -11,7 +11,18 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+    loadComponent: () => import('./core/layouts/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      },
+      {
+        path: 'users',
+        loadChildren: () => import('./features/users/users.routes').then(m => m.usersRoutes)
+      }
+      // Future: events, tasks, notifications as children here
+    ]
   },
   {
     path: '**',

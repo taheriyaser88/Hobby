@@ -1,5 +1,6 @@
 package com.hobby.service.auth;
 
+import com.hobby.enums.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -46,6 +47,54 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    /**
+     * Generate JWT token with role
+     * @param userId - User ID
+     * @param email - User email
+     * @param name - User full name
+     * @param role - User role
+     * @return JWT token string
+     */
+    public String generateToken(Long userId, String email, String name, Role role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("email", email);
+        claims.put("name", name);
+        claims.put("role", role.name()); // Role as string
+        claims.put("sub", email); // Subject
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /**
+     * Get role from JWT token
+     * @param token - JWT token
+     * @return Role or null if not found
+     */
+    public Role getRoleFromToken(String token) {
+        try {
+            Object roleObj = Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("role");
+            
+            if (roleObj != null) {
+                return Role.valueOf(roleObj.toString());
+            }
+        } catch (Exception e) {
+            // Return null if role not found or invalid
+        }
+        return null;
     }
 
     public String getEmailFromToken(String token) {

@@ -1,27 +1,23 @@
 package com.hobby.model.user;
 
+import com.hobby.enums.Role;
 import com.hobby.model.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity {
     
     @NotBlank
-    @Size(max = 50)
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-    
-    @NotBlank
-    @Size(max = 50)
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Size(max = 200)
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
     
     @Email
     @NotBlank
@@ -30,52 +26,37 @@ public class User extends BaseEntity {
     private String email;
     
     @Size(max = 500)
-    @Column(name = "profile_picture")
-    private String profilePicture;
+    @Column(name = "avatar")
+    private String avatar;
     
-    @Size(max = 50)
-    @Column(name = "google_id", unique = true, length = 50)
-    private String googleId;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
     
-    @Size(max = 20)
-    @Column(name = "phone_number")
-    private String phoneNumber;
-    
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
-    
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
     
     // Constructors
-    public User() {}
+    public User() {
+        this.createdAt = LocalDateTime.now();
+    }
     
-    public User(String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String fullName, String email, String avatar, Role role) {
+        this.fullName = fullName;
         this.email = email;
+        this.avatar = avatar;
+        this.role = role;
+        this.createdAt = LocalDateTime.now();
     }
     
     // Getters and Setters
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
     
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    
-    public String getLastName() {
-        return lastName;
-    }
-    
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
     
     public String getEmail() {
@@ -86,51 +67,27 @@ public class User extends BaseEntity {
         this.email = email;
     }
     
-    public String getProfilePicture() {
-        return profilePicture;
+    public String getAvatar() {
+        return avatar;
     }
     
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
     
-    public String getGoogleId() {
-        return googleId;
+    public Role getRole() {
+        return role;
     }
     
-    public void setGoogleId(String googleId) {
-        this.googleId = googleId;
+    public void setRole(Role role) {
+        this.role = role;
     }
     
-    public Boolean getIsActive() {
-        return isActive;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
     
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-    
-    public Set<Role> getRoles() {
-        return roles;
-    }
-    
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-    
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-    
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-    
-    public void removeRole(Role role) {
-        this.roles.remove(role);
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

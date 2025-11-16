@@ -1,0 +1,55 @@
+<div class="page-container">
+  <div class="top-actions">
+    <div class="top-actions-inner">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="جستجو کاربران..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearch()"
+      />
+
+      <button class="primary-btn" (click)="onCreateUser()">+</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <ng-container *ngIf="isLoading">
+    <div class="state-box">در حال بارگذاری...</div>
+  </ng-container>
+
+  <!-- Error -->
+  <ng-container *ngIf="isError">
+    <div class="state-box text-center">
+      خطا در بارگذاری کاربران
+      <button class="secondary-btn mt-2" (click)="reload()">تلاش مجدد</button>
+    </div>
+  </ng-container>
+
+  <!-- Empty -->
+  <ng-container *ngIf="!isLoading && !isError && users.length === 0">
+    <div class="state-box text-center">
+      کاربری یافت نشد
+    </div>
+  </ng-container>
+
+  <!-- Users -->
+  <div class="user-list-container" *ngIf="users.length > 0">
+    <div class="user-card" *ngFor="let u of users">
+      <div class="info">
+        <div class="name">{{ u.fullName }}</div>
+        <div class="email">{{ u.email }}</div>
+      </div>
+      <button class="secondary-btn" (click)="editUser(u)">ویرایش</button>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="total > pageSize">
+    <button (click)="prevPage()" [disabled]="page === 1">قبلی</button>
+    <span>{{ page }} / {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="page === totalPages">بعدی</button>
+  </div>
+</div>
+
+

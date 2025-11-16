@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 export class LogoComponent {
   @Input() src: string = '/EventMeventLogo.svg';
   @Input() alt: string = 'Event Mevent Logo';
-  @Input() size: number = 40;
+  @Input() size: number = 48;
   @Input() className: string = '';
 }
 

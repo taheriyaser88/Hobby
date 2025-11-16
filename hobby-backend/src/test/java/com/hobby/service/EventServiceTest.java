@@ -1,5 +1,6 @@
 package com.hobby.service;
 
+import com.hobby.enums.Role;
 import com.hobby.model.event.Event;
 import com.hobby.model.user.User;
 import com.hobby.repository.event.EventRepository;
@@ -36,9 +37,9 @@ class EventServiceTest {
     void setUp() {
         testUser = new User();
         testUser.setId(1L);
-        testUser.setFirstName("John");
-        testUser.setLastName("Doe");
+        testUser.setFullName("John Doe");
         testUser.setEmail("john.doe@example.com");
+        testUser.setRole(Role.USER);
 
         testEvent = new Event();
         testEvent.setId(1L);

@@ -25,7 +25,9 @@ public class SMSService {
 
         try {
             String message = buildSMSContent(notification);
-            sendSMS(notification.getUser().getPhoneNumber(), message);
+            // SMS feature disabled - phoneNumber removed from User entity
+            // sendSMS(notification.getUser().getPhoneNumber(), message);
+            System.out.println("SMS notification skipped - phoneNumber not available");
         } catch (Exception e) {
             System.err.println("Failed to send SMS notification: " + e.getMessage());
         }
@@ -39,7 +41,9 @@ public class SMSService {
 
         try {
             String message = buildEventReminderSMSContent(user, eventTitle, eventTime);
-            sendSMS(user.getPhoneNumber(), message);
+            // SMS feature disabled - phoneNumber removed from User entity
+            // sendSMS(user.getPhoneNumber(), message);
+            System.out.println("SMS notification skipped - phoneNumber not available");
         } catch (Exception e) {
             System.err.println("Failed to send event reminder SMS: " + e.getMessage());
         }
@@ -53,7 +57,9 @@ public class SMSService {
 
         try {
             String message = buildTaskReminderSMSContent(user, taskTitle, taskDueDate);
-            sendSMS(user.getPhoneNumber(), message);
+            // SMS feature disabled - phoneNumber removed from User entity
+            // sendSMS(user.getPhoneNumber(), message);
+            System.out.println("SMS notification skipped - phoneNumber not available");
         } catch (Exception e) {
             System.err.println("Failed to send task reminder SMS: " + e.getMessage());
         }

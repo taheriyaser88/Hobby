@@ -118,7 +118,7 @@ public class NotificationDispatcherService {
             emailService.sendWelcomeEmail(user);
             
             // Create in-app notification
-            String message = "Welcome to " + user.getFirstName() + "! We're excited to have you on board.";
+            String message = "Welcome to " + user.getFullName() + "! We're excited to have you on board.";
             Notification notification = new Notification("Welcome", message, user, "WELCOME");
             notificationService.save(notification);
             

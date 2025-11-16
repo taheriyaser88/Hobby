@@ -4,12 +4,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from '../../core/services/notification.service';
 import { EventService, Event } from '../../core/services/event.service';
 import { TaskService, Task } from '../../core/services/task.service';
-import { DashboardNavbarComponent } from '../../core/components/dashboard-navbar/dashboard-navbar.component';
+import { AuthService } from '../../core/auth/auth.service';
+import { AuthResponse } from '../../core/auth/models/auth-response.model';
+import { UserRole } from '../../core/enums/user-role.enum';
 
 @Component({
   standalone: true,
   selector: 'app-dashboard',
-  imports: [CommonModule, DashboardNavbarComponent],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
@@ -19,6 +21,7 @@ export class DashboardComponent implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly eventService = inject(EventService);
   private readonly taskService = inject(TaskService);
+  private readonly authService = inject(AuthService);
 
   readonly recentEvents = signal<Event[]>([]);
   readonly recentTasks = signal<Task[]>([]);
@@ -48,44 +51,50 @@ export class DashboardComponent implements OnInit {
     const loginParam = loginParamFromUrl || loginParamFromRoute;
     const token = tokenFromUrl || tokenFromRoute;
 
-    // Check if we already have a token in localStorage (from landing redirect)
-    const existingToken = localStorage.getItem('auth_token');
-    const finalToken = token || existingToken;
-
-    if (loginParam === 'success' || finalToken) {
-      if (finalToken && !existingToken) {
-        // Save token to localStorage if not already saved
-        localStorage.setItem('auth_token', finalToken);
-        console.log('JWT token saved to localStorage');
-      }
-
-      // Only show toast if we just logged in (have query params)
-      if (loginParam === 'success' || token) {
-        // Decode token to get user name - show notification immediately
-        try {
-          const tokenToDecode = finalToken || token;
-          if (tokenToDecode) {
-            const payload = JSON.parse(atob(tokenToDecode.split('.')[1]));
-            const displayName = payload.name || payload.email || 'کاربر';
-            // Show success message - تک‌خطی رنگی
-            this.notification.success(
-              `خوش آمدید، ${displayName}! ورود شما با موفقیت انجام شد.`
-            );
-          } else {
-            this.notification.success('ورود شما با موفقیت انجام شد.');
-          }
-        } catch (e) {
-          this.notification.success('ورود شما با موفقیت انجام شد.');
+    if (loginParam === 'success' && token) {
+      // Decode token to get user info
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        
+        // Map role from token
+        let role: UserRole = UserRole.USER;
+        if (payload.role) {
+          const roleStr = String(payload.role);
+          role = (roleStr === 'SUPER_ADMIN' ? UserRole.SUPER_ADMIN :
+                 roleStr === 'EVENT_MANAGER' ? UserRole.EVENT_MANAGER :
+                 roleStr === 'STAFF' ? UserRole.STAFF : UserRole.USER);
         }
+
+        // Create AuthResponse and handle callback
+        const authResponse: AuthResponse = {
+          accessToken: token,
+          user: {
+            id: payload.userId || payload.id || '',
+            email: payload.email || '',
+            name: payload.name || payload.fullName || '',
+            picture: payload.picture || payload.avatarUrl,
+            role: role,
+            roles: payload.roles || [],
+          }
+        };
+
+        // Save token and user via AuthService
+        this.authService.handleAuthCallback(authResponse);
+
+        // Show welcome message
+        const displayName = payload.name || payload.fullName || payload.email || 'کاربر';
+        this.notification.success(
+          `خوش آمدید، ${displayName}! ورود شما با موفقیت انجام شد.`
+        );
+      } catch (e) {
+        console.error('Error processing login token:', e);
+        this.notification.success('ورود شما با موفقیت انجام شد.');
       }
 
-      // Clean URL by removing query params after a short delay to ensure notification is visible
-      if (loginParam || token) {
-        // Small delay to ensure notification renders before URL change
-        setTimeout(() => {
-          this.router.navigate(['/dashboard'], { replaceUrl: true });
-        }, 100);
-      }
+      // Clean URL by removing query params after a short delay
+      setTimeout(() => {
+        this.router.navigate(['/dashboard'], { replaceUrl: true });
+      }, 100);
     }
   }
 

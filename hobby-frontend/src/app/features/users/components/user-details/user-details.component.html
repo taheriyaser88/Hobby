@@ -1,0 +1,71 @@
+<div class="user-details-container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">جزئیات کاربر</h1>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="onEdit()">
+        ویرایش
+      </button>
+      <button class="btn-danger" (click)="onDelete()">
+        حذف
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <p>در حال بارگذاری...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <button class="btn-secondary" (click)="router.navigate(['/dashboard/users'])">
+        بازگشت به لیست
+      </button>
+    </div>
+  }
+
+  <!-- User Details -->
+  @else if (user()) {
+    <div class="user-details-card">
+      <!-- User Avatar -->
+      <div class="user-avatar-section">
+        <div class="user-avatar-large">
+          @if (user()?.picture) {
+            <img [src]="user()?.picture" [alt]="user()?.name" />
+          } @else {
+            <span class="user-initials-large">{{ user()?.name ? user()!.name.charAt(0).toUpperCase() : '?' }}</span>
+          }
+        </div>
+        <h2 class="user-name-large">{{ user()?.name }}</h2>
+      </div>
+
+      <!-- User Information -->
+      <div class="user-info-section">
+        <div class="info-row">
+          <span class="info-label">نام:</span>
+          <span class="info-value">{{ user()?.name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">ایمیل:</span>
+          <span class="info-value">{{ user()?.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">نقش‌ها:</span>
+          <span class="info-value">{{ formatRoles(user()?.roles || []) }}</span>
+        </div>
+        @if (user()?.createdAt) {
+          <div class="info-row">
+            <span class="info-label">تاریخ ایجاد:</span>
+            <span class="info-value">{{ formatDate(user()?.createdAt) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+

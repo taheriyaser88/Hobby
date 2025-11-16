@@ -1,0 +1,130 @@
+<div class="user-list-container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">لیست کاربران</h1>
+    <button class="btn-primary" (click)="onCreateUser()">
+      <span class="btn-icon">➕</span>
+      <span>ایجاد کاربر</span>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <p>در حال بارگذاری...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <button class="btn-secondary" (click)="loadUsers()">
+        تلاش مجدد
+      </button>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @else if (users().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">👥</div>
+      <p>هنوز کاربری ایجاد نشده است</p>
+      <button class="btn-primary" (click)="onCreateUser()">
+        ایجاد کاربر جدید
+      </button>
+    </div>
+  }
+
+  <!-- Users List/Table -->
+  @else {
+    <!-- Mobile: Vertical List -->
+    <div class="users-list-mobile">
+      @for (user of users(); track user.id) {
+        <div class="user-card-mobile">
+          <div class="user-card-header">
+            <div class="user-avatar">
+              @if (user.picture) {
+                <img [src]="user.picture" [alt]="user.name" />
+              } @else {
+                <span class="user-initials">{{ user.name.charAt(0).toUpperCase() }}</span>
+              }
+            </div>
+            <div class="user-info">
+              <h3 class="user-name">{{ user.name }}</h3>
+              <p class="user-email">{{ user.email }}</p>
+            </div>
+          </div>
+          <div class="user-card-body">
+            <div class="user-detail">
+              <span class="detail-label">نقش‌ها:</span>
+              <span class="detail-value">{{ formatRoles(user.roles) }}</span>
+            </div>
+            @if (user.createdAt) {
+              <div class="user-detail">
+                <span class="detail-label">تاریخ ایجاد:</span>
+                <span class="detail-value">{{ formatDate(user.createdAt) }}</span>
+              </div>
+            }
+          </div>
+          <div class="user-card-actions">
+            <button class="btn-edit" (click)="onEditUser(user.id)">
+              ویرایش
+            </button>
+            <button class="btn-delete" (click)="onDeleteUser(user)">
+              حذف
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Desktop: Table -->
+    <div class="users-table-desktop">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>نام</th>
+            <th>ایمیل</th>
+            <th>نقش‌ها</th>
+            <th>تاریخ ایجاد</th>
+            <th>عملیات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar-small">
+                    @if (user.picture) {
+                      <img [src]="user.picture" [alt]="user.name" />
+                    } @else {
+                      <span class="user-initials-small">{{ user.name.charAt(0).toUpperCase() }}</span>
+                    }
+                  </div>
+                  <span>{{ user.name }}</span>
+                </div>
+              </td>
+              <td>{{ user.email }}</td>
+              <td>{{ formatRoles(user.roles) }}</td>
+              <td>{{ formatDate(user.createdAt) }}</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-edit-small" (click)="onEditUser(user.id)">
+                    ویرایش
+                  </button>
+                  <button class="btn-delete-small" (click)="onDeleteUser(user)">
+                    حذف
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+

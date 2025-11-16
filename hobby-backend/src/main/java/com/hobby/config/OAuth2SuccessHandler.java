@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
@@ -94,13 +95,23 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                         lastName = " ";
                     }
                     
-                    User savedUser = userService.createOrUpdateUser(sub, email, firstName, lastName, picture);
+                    // Use google-sync endpoint instead (handled separately)
+                    // For now, just find or create user
+                    User savedUser;
+                    Optional<User> existingUser = userService.findUserByEmail(email);
+                    if (existingUser.isPresent()) {
+                        savedUser = existingUser.get();
+                        // Update if needed
+                        savedUser = userService.updateUserIfNeeded(savedUser, name, picture);
+                    } else {
+                        savedUser = userService.createGoogleUser(email, name, picture);
+                    }
                     System.out.println("User saved/updated: " + email);
                     
                     // Generate JWT token
                     if (savedUser != null) {
                         String fullName = name != null ? name : (firstName + " " + lastName).trim();
-                        String token = jwtService.generateToken(savedUser.getId(), email, fullName);
+                        String token = jwtService.generateToken(savedUser.getId(), email, fullName, savedUser.getRole());
                         System.out.println("JWT token generated for user: " + email);
                         
                         // Add JWT token to redirect URL as query parameter

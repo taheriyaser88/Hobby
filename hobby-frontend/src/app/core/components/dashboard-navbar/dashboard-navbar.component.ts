@@ -1,7 +1,9 @@
 import { Component, signal, inject, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService, UserProfile } from '../../services/auth.service';
+import { AuthService } from '../../auth/auth.service';
+import { User } from '../../auth/models/user.model';
+import { UserRole } from '../../enums/user-role.enum';
 import { NotificationService } from '../../services/notification.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -28,44 +30,29 @@ export class DashboardNavbarComponent implements OnInit, AfterViewInit, OnDestro
   private readonly notification = inject(NotificationService);
   @ViewChild('userMenuWrapper', { static: false }) userMenuWrapper?: ElementRef;
 
-  readonly user = signal<UserProfile | null>(null);
+  readonly user = signal<User | null>(null);
   readonly loading = signal(true);
   readonly showUserMenu = signal(false);
   readonly showMobileMenu = signal(false);
   
   private clickSubscription?: Subscription;
+  private userSubscription?: Subscription;
 
   ngOnInit(): void {
-    console.log('DashboardNavbarComponent ngOnInit called');
-    
-    // Always set a default user immediately to ensure component can render
-    // This prevents component from failing to render if API is slow or fails
-    this.user.set({
-      id: '',
-      fullName: 'کاربر',
-      email: '',
-      avatarUrl: ''
+    // Subscribe to current user from AuthService
+    this.userSubscription = this.authService.getCurrentUser().subscribe((user) => {
+      this.user.set(user);
+      this.loading.set(false);
     });
-    this.loading.set(false);
-    
-    // Try to load from token first (synchronous, non-blocking)
-    try {
-      this.loadUserFromToken();
-    } catch (e) {
-      console.error('Error loading user from token:', e);
-      // Continue with default user
+
+    // Load initial user data
+    const currentUser = this.authService.getCurrentUserValue();
+    if (currentUser) {
+      this.user.set(currentUser);
+      this.loading.set(false);
+    } else {
+      this.loading.set(false);
     }
-    
-    // Try to load from API in background (non-blocking)
-    // This will update user data if API call succeeds
-    try {
-      this.loadUserProfile();
-    } catch (e) {
-      console.error('Error loading user profile:', e);
-      // Don't let API errors prevent component from rendering
-    }
-    
-    console.log('DashboardNavbarComponent ngOnInit completed, user:', this.user());
   }
 
   ngAfterViewInit(): void {
@@ -75,6 +62,9 @@ export class DashboardNavbarComponent implements OnInit, AfterViewInit, OnDestro
   ngOnDestroy(): void {
     if (this.clickSubscription) {
       this.clickSubscription.unsubscribe();
+    }
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 
@@ -95,46 +85,35 @@ export class DashboardNavbarComponent implements OnInit, AfterViewInit, OnDestro
     }, 0);
   }
 
-  private loadUserProfile(): void {
-    // Don't set loading to true here - we want component to render immediately
-    // Try to load from API, but don't fail if it errors
-    this.authService.fetchProfile().subscribe({
-      next: (profile) => {
-        console.log('User profile loaded from API:', profile);
-        this.user.set(profile);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('Error loading user profile from API:', err);
-        // Don't set loading to false here - we already set it to false in ngOnInit
-        // Don't let API errors prevent component from rendering
-        // Component should already have user data from token or default
-      }
-    });
-  }
-
-  private loadUserFromToken(): void {
-    try {
-      const token = localStorage.getItem('auth_token');
-      if (token) {
-        console.log('Token found, decoding...');
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log('Token payload:', payload);
-        this.user.set({
-          id: payload.userId || payload.id || '',
-          fullName: payload.name || payload.fullName || 'کاربر',
-          email: payload.email || '',
-          avatarUrl: payload.avatarUrl || payload.picture || ''
-        });
-        console.log('User set from token:', this.user());
-      } else {
-        console.log('No token found, using default user');
-        // If no token, keep default user (already set in ngOnInit)
-      }
-    } catch (e) {
-      console.error('Error decoding token:', e);
-      // Even on error, keep default user (already set in ngOnInit)
+  /**
+   * Check if current user is admin
+   */
+  isAdmin(): boolean {
+    const currentUser = this.user();
+    if (!currentUser) {
+      return false;
     }
+    
+    // Check new role field (UserRole enum or string)
+    if (currentUser.role) {
+      const roleStr = String(currentUser.role);
+      const isSuperAdmin = roleStr === UserRole.SUPER_ADMIN || roleStr === 'SUPER_ADMIN';
+      const isEventManager = roleStr === UserRole.EVENT_MANAGER || roleStr === 'EVENT_MANAGER';
+      if (isSuperAdmin || isEventManager) return true;
+    }
+    
+    // Fallback: check roles array for backward compatibility
+    if (currentUser.roles && currentUser.roles.length > 0) {
+      return currentUser.roles.some(r => {
+        const roleStr = String(r);
+        return roleStr === 'admin' || 
+               roleStr === 'ادمین' || 
+               roleStr === 'SUPER_ADMIN' || 
+               roleStr === 'EVENT_MANAGER';
+      });
+    }
+    
+    return false;
   }
 
   toggleUserMenu(event?: Event): void {
@@ -157,23 +136,23 @@ export class DashboardNavbarComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   onLogout(): void {
-    localStorage.removeItem('auth_token');
+    this.authService.logout();
     this.notification.success('با موفقیت خارج شدید.');
-    window.location.href = '/';
   }
 
   getUserDisplayName(): string {
     const user = this.user();
-    if (!user) return 'کاربر';
-    return user.fullName || user.email || 'کاربر';
+    if (!user) return '';
+    // Return full name, fallback to email if name is empty
+    return user.name || user.email || '';
   }
 
   getUserInitials(): string {
     const name = this.getUserDisplayName();
-    if (name === 'کاربر') return 'ک';
-    const parts = name.split(' ');
+    if (!name) return '?';
+    const parts = name.split(' ').filter(p => p.length > 0);
     if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
     return name[0].toUpperCase();
   }

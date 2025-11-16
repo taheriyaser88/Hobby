@@ -1,6 +1,8 @@
 package com.hobby.repository.user;
 
 import com.hobby.model.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,17 +16,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     Optional<User> findByEmail(String email);
     
-    Optional<User> findByGoogleId(String googleId);
+    boolean existsByEmail(String email);
     
-    List<User> findByIsActiveTrue();
-    
-    @Query("SELECT u FROM User u WHERE u.firstName LIKE %:name% OR u.lastName LIKE %:name%")
+    @Query("SELECT u FROM User u WHERE u.fullName LIKE %:name%")
     List<User> findByNameContaining(@Param("name") String name);
     
     @Query("SELECT u FROM User u WHERE u.email LIKE %:email%")
     List<User> findByEmailContaining(@Param("email") String email);
-    
-    boolean existsByEmail(String email);
-    
-    boolean existsByGoogleId(String googleId);
+
+    Page<User> findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
+            String fullName, String email, Pageable pageable);
 }

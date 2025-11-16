@@ -1,7 +1,8 @@
 package com.hobby.controller;
 
+import com.hobby.enums.Role;
+import com.hobby.dto.common.PagedResponse;
 import com.hobby.model.user.User;
-import com.hobby.model.user.Role;
 import com.hobby.model.user.Permission;
 import com.hobby.service.user.UserService;
 import com.hobby.service.user.RoleService;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping({"/api/users", "/users"})
 @CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
@@ -61,15 +62,13 @@ public class UserController {
                 if (dbUser.isPresent()) {
                     User user = dbUser.get();
                     profile.put("id", user.getId());
-                    profile.put("fullName", user.getFirstName() + " " + user.getLastName());
-                    if (user.getProfilePicture() != null) {
-                        profile.put("avatarUrl", user.getProfilePicture());
+                    profile.put("fullName", user.getFullName());
+                    if (user.getAvatar() != null) {
+                        profile.put("avatarUrl", user.getAvatar());
                     }
-                    // Add roles if needed
-                    if (!user.getRoles().isEmpty()) {
-                        profile.put("roles", user.getRoles().stream()
-                            .map(Role::getName)
-                            .toList());
+                    // Add role
+                    if (user.getRole() != null) {
+                        profile.put("role", user.getRole().name());
                     }
                 }
             }
@@ -84,9 +83,19 @@ public class UserController {
 
     // Get all users
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAll();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<PagedResponse<User>> getAllUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String search
+    ) {
+        var result = userService.searchPaged(search, page, size);
+        var body = new PagedResponse<>(
+                result.getContent(),
+                result.getTotalElements(),
+                page,
+                size
+        );
+        return ResponseEntity.ok(body);
     }
 
     // Get user by ID
@@ -97,7 +106,23 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get user by email
+    // Get user by email (query parameter)
+    @GetMapping("/by-email")
+    public ResponseEntity<?> getUserByEmailQuery(@RequestParam String email) {
+        try {
+            Optional<User> user = userService.findByEmail(email);
+            if (user.isPresent()) {
+                return ResponseEntity.ok(user.get());
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // Get user by email (path variable)
     @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userService.findByEmail(email);
@@ -105,13 +130,6 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get user by Google ID
-    @GetMapping("/google/{googleId}")
-    public ResponseEntity<User> getUserByGoogleId(@PathVariable String googleId) {
-        Optional<User> user = userService.findByGoogleId(googleId);
-        return user.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 
     // Create or update user
     @PostMapping
@@ -154,111 +172,33 @@ public class UserController {
         return ResponseEntity.ok(exists);
     }
 
-    // Check if Google ID exists
-    @GetMapping("/exists/google/{googleId}")
-    public ResponseEntity<Boolean> checkGoogleIdExists(@PathVariable String googleId) {
-        boolean exists = userService.existsByGoogleId(googleId);
-        return ResponseEntity.ok(exists);
-    }
 
-    // Get user roles
-    @GetMapping("/{id}/roles")
-    public ResponseEntity<List<Role>> getUserRoles(@PathVariable Long id) {
+    // Get user role
+    @GetMapping("/{id}/role")
+    public ResponseEntity<Role> getUserRole(@PathVariable Long id) {
         Optional<User> user = userService.findById(id);
-        if (user.isPresent()) {
-            List<Role> roles = user.get().getRoles().stream().toList();
-            return ResponseEntity.ok(roles);
+        if (user.isPresent() && user.get().getRole() != null) {
+            return ResponseEntity.ok(user.get().getRole());
         }
         return ResponseEntity.notFound().build();
     }
 
-    // Add role to user
-    @PostMapping("/{id}/roles")
-    public ResponseEntity<User> addRoleToUser(
+    // Update user role (only SUPER_ADMIN can change roles)
+    @PutMapping("/{id}/role")
+    public ResponseEntity<User> updateUserRole(
             @PathVariable Long id,
-            @RequestParam Long roleId) {
+            @RequestParam Role role) {
         try {
-            Optional<User> user = userService.findById(id);
-            Optional<Role> role = roleService.findById(roleId);
-            
-            if (user.isPresent() && role.isPresent()) {
-                user.get().addRole(role.get());
-                User updatedUser = userService.save(user.get());
-                return ResponseEntity.ok(updatedUser);
+            Optional<User> userOpt = userService.findById(id);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                user = userService.assignRole(user, role);
+                return ResponseEntity.ok(user);
             }
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    // Remove role from user
-    @DeleteMapping("/{id}/roles/{roleId}")
-    public ResponseEntity<User> removeRoleFromUser(
-            @PathVariable Long id,
-            @PathVariable Long roleId) {
-        try {
-            Optional<User> user = userService.findById(id);
-            Optional<Role> role = roleService.findById(roleId);
-            
-            if (user.isPresent() && role.isPresent()) {
-                user.get().removeRole(role.get());
-                User updatedUser = userService.save(user.get());
-                return ResponseEntity.ok(updatedUser);
-            }
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    // Get all roles
-    @GetMapping("/roles")
-    public ResponseEntity<List<Role>> getAllRoles() {
-        List<Role> roles = roleService.findAll();
-        return ResponseEntity.ok(roles);
-    }
-
-    // Get role by ID
-    @GetMapping("/roles/{id}")
-    public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
-        Optional<Role> role = roleService.findById(id);
-        return role.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // Create role
-    @PostMapping("/roles")
-    public ResponseEntity<Role> createRole(@RequestBody Role role) {
-        try {
-            Role createdRole = roleService.save(role);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdRole);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    // Update role
-    @PutMapping("/roles/{id}")
-    public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role role) {
-        Optional<Role> existingRole = roleService.findById(id);
-        if (existingRole.isPresent()) {
-            role.setId(id);
-            Role updatedRole = roleService.save(role);
-            return ResponseEntity.ok(updatedRole);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    // Delete role
-    @DeleteMapping("/roles/{id}")
-    public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
-        Optional<Role> role = roleService.findById(id);
-        if (role.isPresent()) {
-            roleService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
     }
 
     // Get all permissions

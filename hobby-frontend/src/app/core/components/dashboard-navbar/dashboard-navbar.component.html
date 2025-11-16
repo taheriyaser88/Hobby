@@ -18,6 +18,11 @@
       <a routerLink="/dashboard/events" routerLinkActive="active">
         رویدادها
       </a>
+      @if (isAdmin()) {
+        <a routerLink="/dashboard/users" routerLinkActive="active">
+          کاربران
+        </a>
+      }
       <a routerLink="/dashboard/tasks" routerLinkActive="active">
         وظایف
       </a>
@@ -35,8 +40,8 @@
       <div class="user-menu-wrapper" #userMenuWrapper>
         <button class="user-menu-trigger" (click)="toggleUserMenu($event)" aria-label="User menu">
           <div class="user-avatar">
-            @if (user()?.avatarUrl) {
-              <img [src]="user()?.avatarUrl" [alt]="getUserDisplayName()" />
+            @if (user()?.picture) {
+              <img [src]="user()?.picture" [alt]="getUserDisplayName()" />
             } @else {
               <span class="user-initials">{{ getUserInitials() }}</span>
             }
@@ -48,22 +53,6 @@
         <!-- User Dropdown Menu -->
         @if (showUserMenu()) {
           <div class="user-dropdown">
-            <div class="user-dropdown-header">
-              <div class="user-avatar-large">
-                @if (user()?.avatarUrl) {
-                  <img [src]="user()?.avatarUrl" [alt]="getUserDisplayName()" />
-                } @else {
-                  <span class="user-initials-large">{{ getUserInitials() }}</span>
-                }
-              </div>
-              <div class="user-info">
-                <div class="user-name-large">{{ getUserDisplayName() }}</div>
-                @if (user()?.email) {
-                  <div class="user-email">{{ user()?.email }}</div>
-                }
-              </div>
-            </div>
-            <div class="user-dropdown-divider"></div>
             <a routerLink="/dashboard/profile" class="user-dropdown-item" (click)="closeUserMenu(); $event.stopPropagation()">
               <span class="item-icon">👤</span>
               <span>پروفایل</span>
@@ -90,8 +79,8 @@
       <div class="mobile-menu-header">
         <div class="mobile-user-info">
           <div class="user-avatar">
-            @if (user()?.avatarUrl) {
-              <img [src]="user()?.avatarUrl" [alt]="getUserDisplayName()" />
+            @if (user()?.picture) {
+              <img [src]="user()?.picture" [alt]="getUserDisplayName()" />
             } @else {
               <span class="user-initials">{{ getUserInitials() }}</span>
             }
@@ -116,6 +105,12 @@
           <span class="nav-icon">📅</span>
           <span>رویدادها</span>
         </a>
+        @if (isAdmin()) {
+          <a routerLink="/dashboard/users" routerLinkActive="active" (click)="closeMobileMenu()">
+            <span class="nav-icon">👥</span>
+            <span>کاربران</span>
+          </a>
+        }
         <a routerLink="/dashboard/tasks" routerLinkActive="active" (click)="closeMobileMenu()">
           <span class="nav-icon">✅</span>
           <span>وظایف</span>

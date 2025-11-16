@@ -79,7 +79,7 @@ public class EmailService {
 
     private String buildEmailContent(Notification notification) {
         StringBuilder content = new StringBuilder();
-        content.append("Hello ").append(notification.getUser().getFirstName()).append(",\n\n");
+        content.append("Hello ").append(notification.getUser().getFullName()).append(",\n\n");
         content.append(notification.getMessage()).append("\n\n");
         
         if (notification.getLink() != null && !notification.getLink().isEmpty()) {
@@ -94,7 +94,7 @@ public class EmailService {
 
     private String buildEventReminderContent(User user, String eventTitle, String eventTime, String eventLocation) {
         StringBuilder content = new StringBuilder();
-        content.append("Hello ").append(user.getFirstName()).append(",\n\n");
+        content.append("Hello ").append(user.getFullName()).append(",\n\n");
         content.append("This is a reminder for your upcoming event:\n\n");
         content.append("Event: ").append(eventTitle).append("\n");
         content.append("Time: ").append(eventTime).append("\n");
@@ -112,7 +112,7 @@ public class EmailService {
 
     private String buildTaskReminderContent(User user, String taskTitle, String taskDueDate) {
         StringBuilder content = new StringBuilder();
-        content.append("Hello ").append(user.getFirstName()).append(",\n\n");
+        content.append("Hello ").append(user.getFullName()).append(",\n\n");
         content.append("This is a reminder for your upcoming task:\n\n");
         content.append("Task: ").append(taskTitle).append("\n");
         content.append("Due Date: ").append(taskDueDate).append("\n\n");
@@ -125,7 +125,7 @@ public class EmailService {
 
     private String buildWelcomeEmailContent(User user) {
         StringBuilder content = new StringBuilder();
-        content.append("Hello ").append(user.getFirstName()).append(",\n\n");
+        content.append("Hello ").append(user.getFullName()).append(",\n\n");
         content.append("Welcome to ").append(appName).append("!\n\n");
         content.append("We're excited to have you on board. You can now:\n");
         content.append("- Create and manage events\n");
